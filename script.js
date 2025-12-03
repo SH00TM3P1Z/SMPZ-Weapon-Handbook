@@ -1,5 +1,685 @@
+<<<<<<< HEAD
 // 데이터 저장소 (실제로는 서버나 로컬스토리지 사용)
 let weaponsData = {
+    "권총": [],
+    "돌격 소총": [
+        {
+            id: "1",
+            name: "Colt M16A1",
+            manufacturer: "Colt",
+            manufacturerLogo: "assets/colt-logo.png",
+            manufacturerUrl: "https://www.colt.com/",
+            image: "assets/m16a1.png",
+            description: "1960년대 후반에 Colt가 개발한 5.56x45mm 돌격 소총이자 AR-15/M16의 개량형입니다. M16A1은 베트남 전쟁 중 미군의 표준 제식 소총이 되었고, 신뢰성 향상을 위한 개량이 이루어졌습니다. 현대의 기준으로는 구식이지만, 수집가나 사격 애호가에게 높이 평가되고 있습니다. 또한 대한민국에서는 일부 예비군 부대에서 M16A1이 아직도 운용되고 있는 것으로 알려져 있습니다."
+        },
+        {
+            id: "2",
+            name: "Colt M16A2",
+            manufacturer: "Colt",
+            manufacturerLogo: "assets/colt-logo.png",
+            manufacturerUrl: "https://www.colt.com/",
+            image: "assets/m16a2.png",
+            description: "M16 플랫폼의 후기 발전형인 M16A2는 3점사 기능과 향상된 부품을 도입하여 제어성과 내구성을 크게 개선한 모델입니다. 5.56x45mm NATO 탄을 사용하며 1980~1990년대 동안 미군의 주요 제식 소총으로 운용되었습니다. 높은 정확도와 신뢰성으로 잘 알려져 있으며, 현대 돌격소총 설계의 기준점으로 평가받고 있습니다."
+        },
+        {
+            id: "3",
+            name: "Colt M4A1",
+            manufacturer: "Colt",
+            manufacturerLogo: "assets/colt-logo.png",
+            manufacturerUrl: "https://www.colt.com/",
+            image: "assets/m4a1.png",
+            description: "Colt M4A1은 5.56x45mm NATO탄을 사용하는 AR-15를 기반으로 미국에서 개발된 돌격 소총(카빈) 입니다. 본디 일반 소총보다 가볍고 작으면서도 같은 탄약을 사용하는 소총이 필요한 차량 승무원들과 화력지원반을 위해 개발되었으나, US SOCOM(미합중국 특수작전사령부) 이 특수작전에서도 사용하기 적합할 것이라 생각하여 곧바로 모든 하위 부대에게 M4A1을 보급하였고, 이어 미 육군 및 해병대도 사용하기 시작했습니다."
+        },
+        {
+            id: "4",
+            name: "SIG MCX",
+            manufacturer: "SIG Sauer",
+            manufacturerLogo: "assets/sigsauer-logo.png",
+            manufacturerUrl: "https://www.sigsauer.com/",
+            image: "assets/mcx.png",
+            description: ".300 블랙아웃 MCX 라인은 SIG Sauer에서 설계·제작한 모델로, 반자동과 완전 자동 버전 모두 존재합니다. 이 총기는 이전의 SIG MPX 기관단총에서 이어진 숏-스트로크 가스 피스톤 시스템을 특징으로 합니다. .300 블랙아웃 탄약과 MCX는 모든 AR-15 규격의 탄창과 호환됩니다."
+        },
+        {
+            id: "5",
+            name: "SIG MCX-SPEAR",
+            manufacturer: "SIG Sauer",
+            manufacturerLogo: "assets/sigsauer-logo.png",
+            manufacturerUrl: "https://www.sigsauer.com/",
+            image: "assets/mcxspear.png",
+            description: "MCX SPEAR는 SIG Sauer가 MCX 돌격소총을 기반으로 설계·제작한 다구경 돌격소총입니다. 기본적으로 새로운 6.8x51mm(.277 FURY) 탄을 사용하도록 제작되었으며, M4 카빈을 대체하도록 미군이 요구한 기준에 맞춰 특별히 설계되었습니다."
+        },
+        {
+            id: "6",
+            name: "HK 416A5",
+            manufacturer: "Heckler & Koch",
+            manufacturerLogo: "assets/hk-logo.png",
+            manufacturerUrl: "https://www.heckler-koch.com/en",
+            image: "assets/hk416a5.png",
+            description: "HK416 A5는 헤클러 앤 코흐에서 제작한 5.56x45 mm NATO 탄을 사용하는 HK416 돌격 소총의 추가 개량된 모델입니다. 이전 버전과 비교하여 가장 인상적인 변화는 시장성이 좋은 AR 플랫폼을 탑재했다는 점입니다. 소음기를 사용할 때 도구 없이 가스 조절이 가능하게 개선된 가스 조절기를 탑재하였으며, 사용자를 위하여 재설계된 하부 총몸은 완벽한 양손 조작이 가능하게 최적화되었습니다. 또한 실제 작동 조건에서 사용자의 안전, 신뢰성, 탄창의 호환성 및 내구성 등 기술적인 부분이 많이 개선되었습니다."
+        },
+        {
+            id: "7",
+            name: "Radian Weapons Model 1",
+            manufacturer: "Radian Weapons",
+            manufacturerLogo: "assets/radian-logo.png",
+            manufacturerUrl: "https://www.radianweapons.com/",
+            image: "assets/radianmodel1.png",
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다."
+        },
+        {
+            id: "8",
+            name: "Radian Weapons Model 1 FA",
+            manufacturer: "Radian Weapons",
+            manufacturerLogo: "assets/radian-logo.png",
+            manufacturerUrl: "https://www.radianweapons.com/",
+            image: "assets/radianmodel1.png",
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 모델은 풀 오토 기능을 갖춘 Talon 조정간이 탑재되어 있습니다."
+        }
+    ],
+    "기관단총": [],
+    "저격 소총": [],
+    "산탄총": [],
+    "경기관총": [],
+    "유탄 발사기": [],
+    "특수": []
+};
+
+let isAdmin = false;
+let currentCategory = null;
+let editingWeaponId = null;
+
+// 페이지 로드 시 초기화
+document.addEventListener('DOMContentLoaded', () => {
+    // 모든 모달 닫기 (안전장치)
+    const allModals = document.querySelectorAll('.modal');
+    allModals.forEach(modal => {
+        if (modal.id === 'imageModal') {
+            modal.style.setProperty('display', 'none', 'important');
+        } else {
+            modal.style.display = 'none';
+        }
+    });
+    
+    loadData();
+    renderCategories();
+    setupEventListeners();
+});
+
+// 로컬스토리지에서 데이터 로드
+function loadData() {
+    const saved = localStorage.getItem('weaponsData');
+    if (saved) {
+        const loadedData = JSON.parse(saved);
+        // 기존 데이터와 병합 (초기 데이터 유지)
+        Object.keys(weaponsData).forEach(key => {
+            if (loadedData[key] && loadedData[key].length > 0) {
+                weaponsData[key] = loadedData[key];
+            }
+        });
+    }
+}
+
+// 로컬스토리지에 데이터 저장
+function saveData() {
+    localStorage.setItem('weaponsData', JSON.stringify(weaponsData));
+}
+
+// 카테고리 렌더링
+function renderCategories() {
+    const categoryList = document.getElementById('categoryList');
+    categoryList.innerHTML = '';
+
+    // 전체 무기 카테고리 추가
+    const totalCount = Object.values(weaponsData).reduce((sum, weapons) => sum + weapons.length, 0);
+    const allCategory = createCategoryItem('무기', totalCount, 'all');
+    categoryList.appendChild(allCategory);
+
+    // 각 카테고리 추가
+    const categories = [
+        { key: '권총', name: '권총' },
+        { key: '돌격 소총', name: '돌격 소총' },
+        { key: '기관단총', name: '기관단총' },
+        { key: '저격 소총', name: '저격 소총' },
+        { key: '산탄총', name: '산탄총' },
+        { key: '경기관총', name: '경기관총' },
+        { key: '유탄 발사기', name: '유탄 발사기' },
+        { key: '특수', name: '특수' }
+    ];
+
+    categories.forEach(category => {
+        const count = weaponsData[category.key]?.length || 0;
+        const item = createCategoryItem(category.name, count, category.key);
+        categoryList.appendChild(item);
+    });
+}
+
+// 카테고리 아이템 생성
+function createCategoryItem(name, count, key) {
+    const li = document.createElement('li');
+    li.className = 'category-item';
+    li.dataset.category = key;
+    
+    const link = document.createElement('div');
+    link.className = 'category-link';
+    link.dataset.category = key;
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'category-name';
+    nameSpan.textContent = name;
+    
+    const countSpan = document.createElement('span');
+    countSpan.className = 'category-count';
+    countSpan.textContent = `(${count})`;
+    
+    link.appendChild(nameSpan);
+    link.appendChild(countSpan);
+    li.appendChild(link);
+    
+    // "무기 (전체)" 카테고리는 하위 목록 없음
+    if (key !== 'all') {
+        // 무기 목록 컨테이너
+        const weaponListContainer = document.createElement('ul');
+        weaponListContainer.className = 'weapon-list-sidebar';
+        weaponListContainer.style.display = 'none';
+        li.appendChild(weaponListContainer);
+        
+        link.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleCategory(key, weaponListContainer);
+        });
+    } else {
+        // "무기 (전체)"는 클릭해도 아무 동작 안 함
+        link.style.cursor = 'default';
+    }
+    
+    return li;
+}
+
+// 카테고리 토글 (접기/펼치기)
+function toggleCategory(categoryKey, weaponListContainer) {
+    const isExpanded = weaponListContainer.style.display !== 'none';
+    
+    // 모든 카테고리 접기
+    document.querySelectorAll('.weapon-list-sidebar').forEach(list => {
+        list.style.display = 'none';
+    });
+    
+    // 모든 카테고리 링크 비활성화
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    if (!isExpanded) {
+        // 선택한 카테고리 펼치기
+        weaponListContainer.style.display = 'block';
+        const categoryLink = weaponListContainer.previousElementSibling;
+        categoryLink.classList.add('active');
+        
+        // 무기 목록 렌더링
+        renderWeaponsInSidebar(categoryKey, weaponListContainer);
+    }
+    
+    // 메인 영역은 비워둠 (무기 클릭 시에만 표시)
+    clearWeaponDetail();
+}
+
+// 사이드바에 무기 목록 렌더링
+function renderWeaponsInSidebar(categoryKey, container) {
+    container.innerHTML = '';
+    const weapons = weaponsData[categoryKey] || [];
+    
+    // 알파벳 순으로 정렬
+    const sortedWeapons = [...weapons].sort((a, b) => {
+        return a.name.localeCompare(b.name, 'en', { sensitivity: 'base' });
+    });
+    
+    sortedWeapons.forEach(weapon => {
+        const li = document.createElement('li');
+        li.className = 'weapon-item-sidebar';
+        li.textContent = weapon.name;
+        li.dataset.weaponId = weapon.id;
+        li.dataset.categoryKey = categoryKey;
+        li.style.cursor = 'pointer';
+        li.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showWeaponDetail(weapon, categoryKey);
+        });
+        container.appendChild(li);
+    });
+}
+
+// 무기 상세 정보 표시
+function showWeaponDetail(weapon, categoryKey) {
+    const weaponDetail = document.getElementById('weaponDetail');
+    
+    // 사이드바의 선택된 무기 하이라이트
+    document.querySelectorAll('.weapon-item-sidebar').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.weaponId === weapon.id) {
+            item.classList.add('active');
+        }
+    });
+    
+    weaponDetail.innerHTML = '';
+    
+    const detailCard = document.createElement('div');
+    detailCard.className = 'weapon-detail-card';
+    
+    // 무기 이름 (로고 포함)
+    const nameContainer = document.createElement('div');
+    nameContainer.className = 'weapon-detail-name-container';
+    
+    const name = document.createElement('div');
+    name.className = 'weapon-detail-name';
+    
+    // 제조사 로고가 있으면 표시
+    if (weapon.manufacturerLogo) {
+        const logoImg = document.createElement('img');
+        logoImg.className = 'weapon-manufacturer-logo';
+        logoImg.src = weapon.manufacturerLogo;
+        logoImg.alt = weapon.manufacturer || '';
+        
+        // 제조사 URL이 있으면 링크로 감싸기
+        if (weapon.manufacturerUrl) {
+            const logoLink = document.createElement('a');
+            logoLink.href = weapon.manufacturerUrl;
+            logoLink.target = '_blank';
+            logoLink.rel = 'noopener noreferrer';
+            logoLink.appendChild(logoImg);
+            logoImg.onerror = function() {
+                // 로고 이미지 로드 실패 시 제조사 이름만 텍스트로 표시
+                logoLink.style.display = 'none';
+                if (weapon.manufacturer) {
+                    const manufacturerText = document.createElement('span');
+                    manufacturerText.className = 'weapon-manufacturer-text';
+                    manufacturerText.textContent = weapon.manufacturer;
+                    name.appendChild(manufacturerText);
+                }
+            };
+            name.appendChild(logoLink);
+        } else {
+            // URL이 없으면 그냥 이미지만 추가
+            logoImg.onerror = function() {
+                // 로고 이미지 로드 실패 시 제조사 이름만 텍스트로 표시
+                this.style.display = 'none';
+                if (weapon.manufacturer) {
+                    const manufacturerText = document.createElement('span');
+                    manufacturerText.className = 'weapon-manufacturer-text';
+                    manufacturerText.textContent = weapon.manufacturer;
+                    name.appendChild(manufacturerText);
+                }
+            };
+            name.appendChild(logoImg);
+        }
+    } else if (weapon.manufacturer) {
+        // 로고가 없으면 제조사 이름만 텍스트로 표시
+        // URL이 있으면 링크로 감싸기
+        if (weapon.manufacturerUrl) {
+            const manufacturerLink = document.createElement('a');
+            manufacturerLink.href = weapon.manufacturerUrl;
+            manufacturerLink.target = '_blank';
+            manufacturerLink.rel = 'noopener noreferrer';
+            manufacturerLink.className = 'weapon-manufacturer-text';
+            manufacturerLink.textContent = weapon.manufacturer;
+            manufacturerLink.style.textDecoration = 'none';
+            manufacturerLink.style.color = 'inherit';
+            name.appendChild(manufacturerLink);
+        } else {
+            const manufacturerText = document.createElement('span');
+            manufacturerText.className = 'weapon-manufacturer-text';
+            manufacturerText.textContent = weapon.manufacturer;
+            name.appendChild(manufacturerText);
+        }
+    }
+    
+    const nameText = document.createElement('span');
+    nameText.className = 'weapon-name-text';
+    nameText.textContent = weapon.name;
+    name.appendChild(nameText);
+    
+    nameContainer.appendChild(name);
+    detailCard.appendChild(nameContainer);
+    
+    // 구분선
+    const divider = document.createElement('div');
+    divider.className = 'weapon-detail-divider';
+    detailCard.appendChild(divider);
+    
+    // 총기 사진
+    if (weapon.image) {
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'weapon-detail-image-container';
+        
+        const img = document.createElement('img');
+        img.className = 'weapon-detail-image';
+        img.src = weapon.image;
+        img.alt = weapon.name;
+        img.style.cursor = 'pointer';
+        img.onerror = function() {
+            // 이미지 로드 실패 시 플레이스홀더 표시
+            this.style.display = 'none';
+            imageContainer.innerHTML = '<div class="weapon-image-placeholder">해당 총기 사진</div>';
+        };
+        img.onclick = function() {
+            openImageModal(weapon.image, weapon.name);
+        };
+        
+        imageContainer.appendChild(img);
+        detailCard.appendChild(imageContainer);
+    } else {
+        // 이미지가 없을 경우 플레이스홀더
+        const imageContainer = document.createElement('div');
+        imageContainer.className = 'weapon-detail-image-container';
+        imageContainer.innerHTML = '<div class="weapon-image-placeholder">해당 총기 사진</div>';
+        detailCard.appendChild(imageContainer);
+    }
+    
+    // 설명란
+    if (weapon.description) {
+        const descContainer = document.createElement('div');
+        descContainer.className = 'weapon-detail-description-container';
+        
+        const desc = document.createElement('div');
+        desc.className = 'weapon-detail-description';
+        desc.textContent = weapon.description;
+        descContainer.appendChild(desc);
+        
+        detailCard.appendChild(descContainer);
+    } else {
+        // 설명이 없을 경우 플레이스홀더
+        const descContainer = document.createElement('div');
+        descContainer.className = 'weapon-detail-description-container';
+        descContainer.innerHTML = '<div class="weapon-description-placeholder">해당 총기의 설명</div>';
+        detailCard.appendChild(descContainer);
+    }
+    
+    // 관리자 모드일 경우 편집/삭제 버튼 표시
+    if (isAdmin) {
+        const actions = document.createElement('div');
+        actions.className = 'weapon-detail-actions';
+        
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-btn';
+        editBtn.textContent = '수정';
+        editBtn.onclick = () => editWeapon(weapon.id, categoryKey);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.textContent = '삭제';
+        deleteBtn.onclick = () => deleteWeapon(weapon.id, categoryKey);
+        
+        actions.appendChild(editBtn);
+        actions.appendChild(deleteBtn);
+        detailCard.appendChild(actions);
+    }
+    
+    weaponDetail.appendChild(detailCard);
+    currentCategory = categoryKey;
+}
+
+// 무기 상세 정보 초기화
+function clearWeaponDetail() {
+    const weaponDetail = document.getElementById('weaponDetail');
+    weaponDetail.innerHTML = '<p class="empty-message">좌측에서 카테고리를 선택하고 무기를 클릭하여 정보를 확인하세요.</p>';
+    
+    // 사이드바의 선택된 무기 하이라이트 제거
+    document.querySelectorAll('.weapon-item-sidebar').forEach(item => {
+        item.classList.remove('active');
+    });
+}
+
+
+// 이벤트 리스너 설정
+function setupEventListeners() {
+    // 관리자 로그인 버튼
+    document.getElementById('adminLoginBtn').addEventListener('click', () => {
+        document.getElementById('loginModal').style.display = 'block';
+    });
+    
+    // 로그아웃 버튼
+    document.getElementById('adminLogoutBtn').addEventListener('click', logout);
+    
+    // 로그인 폼
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    
+    // 무기 폼
+    document.getElementById('weaponForm').addEventListener('submit', handleWeaponSubmit);
+    
+    // 모달 닫기
+    document.querySelectorAll('.close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', (e) => {
+            e.target.closest('.modal').style.display = 'none';
+        });
+    });
+    
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+    
+    // 이미지 확대 모달 닫기
+    const imageModal = document.getElementById('imageModal');
+    if (imageModal) {
+        // 모달이 기본적으로 닫혀있도록 보장
+        imageModal.style.display = 'none';
+        
+        const closeImageBtn = document.querySelector('.close-image');
+        if (closeImageBtn) {
+            closeImageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                imageModal.style.setProperty('display', 'none', 'important');
+            });
+        }
+        
+        // 이미지 모달 외부 클릭 시 닫기
+        imageModal.addEventListener('click', (e) => {
+            if (e.target === imageModal || e.target.classList.contains('image-modal')) {
+                imageModal.style.setProperty('display', 'none', 'important');
+            }
+        });
+    }
+    
+    // ESC 키로 모든 모달 닫기
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const imageModal = document.getElementById('imageModal');
+            if (imageModal) {
+                const computedStyle = window.getComputedStyle(imageModal);
+                if (computedStyle.display !== 'none') {
+                    imageModal.style.setProperty('display', 'none', 'important');
+                }
+            }
+            // 다른 모달들도 닫기
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (modal.id !== 'imageModal') {
+                    const computedStyle = window.getComputedStyle(modal);
+                    if (computedStyle.display !== 'none') {
+                        modal.style.display = 'none';
+                    }
+                }
+            });
+        }
+    });
+}
+
+// 이미지 확대 모달 열기
+function openImageModal(imageSrc, imageAlt) {
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    
+    if (imageModal && modalImage) {
+        modalImage.src = imageSrc;
+        modalImage.alt = imageAlt;
+        imageModal.style.setProperty('display', 'flex', 'important');
+    }
+}
+
+// 로그인 처리
+function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    
+    // 간단한 인증 (실제로는 서버에서 처리해야 함)
+    // 기본 관리자 계정: admin / admin123
+    if (username === 'admin' && password === 'admin123') {
+        isAdmin = true;
+        document.getElementById('adminLoginBtn').style.display = 'none';
+        document.getElementById('adminLogoutBtn').style.display = 'block';
+        document.getElementById('loginModal').style.display = 'none';
+        
+        // 현재 표시된 무기 정보 유지 (관리자 버튼만 표시)
+        
+        alert('관리자로 로그인되었습니다.');
+    } else {
+        alert('잘못된 사용자명 또는 비밀번호입니다.');
+    }
+}
+
+// 로그아웃
+function logout() {
+    isAdmin = false;
+    document.getElementById('adminLoginBtn').style.display = 'block';
+    document.getElementById('adminLogoutBtn').style.display = 'none';
+    
+    // 현재 표시된 무기 정보 유지
+    
+    alert('로그아웃되었습니다.');
+}
+
+// 무기 모달 열기
+function openWeaponModal(weaponId = null, categoryKey = null) {
+    editingWeaponId = weaponId;
+    const modal = document.getElementById('weaponModal');
+    const title = document.getElementById('weaponModalTitle');
+    
+    if (weaponId) {
+        title.textContent = '무기 수정';
+        const weapon = weaponsData[categoryKey].find(w => w.id === weaponId);
+        if (weapon) {
+            document.getElementById('weaponId').value = weaponId;
+            document.getElementById('weaponName').value = weapon.name;
+            document.getElementById('weaponCategory').value = categoryKey;
+            document.getElementById('weaponManufacturer').value = weapon.manufacturer || '';
+            document.getElementById('weaponManufacturerLogo').value = weapon.manufacturerLogo || '';
+            document.getElementById('weaponManufacturerUrl').value = weapon.manufacturerUrl || '';
+            document.getElementById('weaponImage').value = weapon.image || '';
+            document.getElementById('weaponDescription').value = weapon.description || '';
+        }
+    } else {
+        title.textContent = '무기 추가';
+        document.getElementById('weaponForm').reset();
+        document.getElementById('weaponId').value = '';
+        if (currentCategory && currentCategory !== 'all') {
+            document.getElementById('weaponCategory').value = currentCategory;
+        }
+    }
+    
+    modal.style.display = 'block';
+}
+
+// 무기 모달 닫기
+function closeWeaponModal() {
+    document.getElementById('weaponModal').style.display = 'none';
+    editingWeaponId = null;
+}
+
+// 무기 추가/수정 처리
+function handleWeaponSubmit(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('weaponName').value;
+    const category = document.getElementById('weaponCategory').value;
+    const manufacturer = document.getElementById('weaponManufacturer').value;
+    const manufacturerLogo = document.getElementById('weaponManufacturerLogo').value;
+    const manufacturerUrl = document.getElementById('weaponManufacturerUrl').value;
+    const image = document.getElementById('weaponImage').value;
+    const description = document.getElementById('weaponDescription').value;
+    
+    if (!category) {
+        alert('카테고리를 선택해주세요.');
+        return;
+    }
+    
+    if (editingWeaponId) {
+        // 수정
+        const weaponIndex = weaponsData[category].findIndex(w => w.id === editingWeaponId);
+        if (weaponIndex !== -1) {
+            weaponsData[category][weaponIndex].name = name;
+            weaponsData[category][weaponIndex].manufacturer = manufacturer;
+            weaponsData[category][weaponIndex].manufacturerLogo = manufacturerLogo;
+            weaponsData[category][weaponIndex].manufacturerUrl = manufacturerUrl;
+            weaponsData[category][weaponIndex].image = image;
+            weaponsData[category][weaponIndex].description = description;
+        }
+    } else {
+        // 추가
+        const newWeapon = {
+            id: Date.now().toString(),
+            name: name,
+            manufacturer: manufacturer,
+            manufacturerLogo: manufacturerLogo,
+            manufacturerUrl: manufacturerUrl,
+            image: image,
+            description: description
+        };
+        weaponsData[category].push(newWeapon);
+    }
+    
+    saveData();
+    renderCategories();
+    
+    // 사이드바 무기 목록 업데이트
+    const categoryItem = document.querySelector(`.category-item[data-category="${category}"]`);
+    if (categoryItem) {
+        const weaponListContainer = categoryItem.querySelector('.weapon-list-sidebar');
+        if (weaponListContainer && weaponListContainer.style.display !== 'none') {
+            renderWeaponsInSidebar(category, weaponListContainer);
+        }
+    }
+    
+    closeWeaponModal();
+    
+    alert(editingWeaponId ? '무기가 수정되었습니다.' : '무기가 추가되었습니다.');
+    
+    // 수정한 경우 현재 표시된 무기 정보 업데이트
+    if (editingWeaponId) {
+        const updatedWeapon = weaponsData[category].find(w => w.id === editingWeaponId);
+        if (updatedWeapon) {
+            showWeaponDetail(updatedWeapon, category);
+        }
+    }
+}
+
+// 무기 수정
+function editWeapon(weaponId, categoryKey) {
+    openWeaponModal(weaponId, categoryKey);
+}
+
+// 무기 삭제
+function deleteWeapon(weaponId, categoryKey) {
+    if (confirm('정말 이 무기를 삭제하시겠습니까?')) {
+        weaponsData[categoryKey] = weaponsData[categoryKey].filter(w => w.id !== weaponId);
+        saveData();
+        renderCategories();
+        
+        // 사이드바 무기 목록 업데이트
+        const categoryItem = document.querySelector(`.category-item[data-category="${categoryKey}"]`);
+        if (categoryItem) {
+            const weaponListContainer = categoryItem.querySelector('.weapon-list-sidebar');
+            if (weaponListContainer && weaponListContainer.style.display !== 'none') {
+                renderWeaponsInSidebar(categoryKey, weaponListContainer);
+            }
+        }
+        
+        // 메인 영역 초기화
+        clearWeaponDetail();
+        alert('무기가 삭제되었습니다.');
+    }
+}
     "권총": [],
     "돌격 소총": [
         {

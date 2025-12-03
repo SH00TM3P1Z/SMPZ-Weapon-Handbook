@@ -1,5 +1,644 @@
+<<<<<<< HEAD
 * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 사이드바 스타일 */
+.sidebar {
+    width: 280px;
+    background: #1a1a1a;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    border-right: 1px solid #333;
+}
+
+.sidebar-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ffffff;
+    text-align: center;
+}
+
+.category-list {
+    list-style: none;
+    margin-bottom: 30px;
+}
+
+.category-item {
+    margin-bottom: 8px;
+}
+
+.weapon-list-sidebar {
+    list-style: none;
+    margin-top: 5px;
+    padding-left: 20px;
+}
+
+.weapon-item-sidebar {
+    padding: 8px 15px;
+    background: #2a2a2a;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.weapon-item-sidebar:hover {
+    background: #333333;
+    transform: translateX(5px);
+}
+
+.weapon-item-sidebar.active {
+    background: #ffffff;
+    color: #000000;
+    font-weight: bold;
+}
+
+.category-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.category-link:hover {
+    background: #333333;
+    transform: translateX(5px);
+}
+
+.category-link.active {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+}
+
+.category-name {
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.category-count {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.category-link.active .category-count {
+    background: rgba(0, 0, 0, 0.2);
+    color: #000000;
+}
+
+/* 관리자 섹션 */
+.admin-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+.admin-btn {
+    width: 100%;
+    padding: 10px;
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.admin-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 40px;
+    background: #000000;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 무기 상세 정보 */
+.weapon-detail {
+    width: 100%;
+    max-width: 1040px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weapon-detail-card {
+    background: #1a1a1a;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
+    width: 100%;
+    text-align: center;
+    border: 2px solid #ffffff;
+}
+
+.weapon-detail-name-container {
+    margin-bottom: 20px;
+}
+
+.weapon-detail-name {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.weapon-manufacturer-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.weapon-detail-name a {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.weapon-detail-name a:hover .weapon-manufacturer-logo {
+    opacity: 0.7;
+    transform: scale(1.1);
+}
+
+.weapon-manufacturer-text {
+    font-size: 24px;
+    font-weight: normal;
+    color: #ffffff;
+    margin-right: 10px;
+}
+
+.weapon-name-text {
+    display: inline-block;
+}
+
+.weapon-detail-divider {
+    height: 2px;
+    background: #ffffff;
+    margin-bottom: 30px;
+}
+
+.weapon-detail-image-container {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    background: #000000;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.weapon-detail-image {
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.2s ease;
+}
+
+.weapon-detail-image:hover {
+    transform: scale(1.02);
+}
+
+.weapon-image-placeholder {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    color: #666;
+    font-size: 18px;
+    border-radius: 10px;
+    border: 1px solid #333;
+}
+
+.weapon-detail-description-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.weapon-detail-description {
+    color: #ffffff;
+    font-size: 16px;
+    line-height: 1.8;
+    text-align: left;
+    padding: 20px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    white-space: pre-wrap;
+    border: 1px solid #333;
+}
+
+.weapon-description-placeholder {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    color: #666;
+    font-size: 18px;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #333;
+}
+
+.weapon-detail-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.weapon-card {
+    background: #1a1a1a;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #333;
+}
+
+.weapon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+    border-color: #ffffff;
+}
+
+.weapon-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.weapon-description {
+    color: #cccccc;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.empty-message {
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+    padding: 60px 20px;
+}
+
+/* 관리자 모드 버튼 */
+.admin-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.add-weapon-btn {
+    padding: 12px 30px;
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-weapon-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.weapon-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.edit-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+}
+
+.edit-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.delete-btn {
+    background: #333333;
+    color: #ffffff;
+    border: 2px solid #666666;
+}
+
+.delete-btn:hover {
+    background: #444444;
+    border-color: #888888;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s;
+}
+
+/* 이미지 모달은 기본 모달 스타일을 덮어씀 */
+.modal.image-modal {
+    display: none;
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s;
+    border: 2px solid #ffffff;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.close {
+    color: #ffffff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover {
+    color: #ccc;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #444;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #000000;
+    color: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #666;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.submit-btn {
+    flex: 1;
+    padding: 12px;
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    background: #333333;
+    color: #ffffff;
+    border: 2px solid #666666;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #444444;
+    border-color: #888888;
+}
+
+/* 이미지 확대 모달 */
+.image-modal {
+    background-color: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.image-modal[style*="display: flex"],
+.image-modal[style*="display:block"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.close-image {
+    position: fixed;
+    top: 20px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2001;
+    transition: all 0.3s ease;
+    line-height: 1;
+    background: rgba(0, 0, 0, 0.5);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-image:hover {
+    color: #ccc;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-image-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 5px 50px rgba(0, 0, 0, 0.5);
+    animation: zoomIn 0.3s ease;
+    margin: auto !important;
+    padding: 0;
+    position: relative;
+    flex-shrink: 0;
+}
+
+@keyframes zoomIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .weapon-detail-card {
+        padding: 30px 20px;
+    }
+    
+    .weapon-detail-name {
+        font-size: 28px;
+    }
+}
     padding: 0;
     box-sizing: border-box;
 }
