@@ -376,7 +376,25 @@ let weaponsData = {
         }
     ],
     "산탄총": [],
-    "경기관총": [],
+    "경기관총": [
+        {
+            id: "1",
+            name: "Kalashnikov PKM",
+            manufacturer: "V.A. Degtyarev",
+            manufacturerLogo: "assets/kalashnikov-logo.png",
+            manufacturerUrl: "https://en.kalashnikovgroup.ru/",
+            image: "assets/pkm.png",
+            description: "PKM(Pulemyot Kalashnikova Modernizirovanny – ‘칼라시니코프의 기관총 개량형’)은 칼라시니코프 PK 기관총의 현대화 버전으로, 7.62×54R 탄약을 사용해 작동합니다. PKM은 강력하고 단순하며 신뢰성과 효율성이 뛰어난 무기로 입증되었습니다. 1960년대 후반부터 현재까지 수십 년 동안 높은 수요를 유지해왔습니다. 제조는 V.A. Degtyarev(데그탸료프) 공장에서 이루어졌습니다.",
+            stats: {
+                recoil: "80",
+                sway: "150",
+                ergonomics: "50",
+                accuracy: "1.08 MOA",
+                velocity: "1059 m/s",
+                rpm: "649"
+            }
+        }
+    ],
     "유탄 발사기": [
         {
             id: "1",
@@ -623,7 +641,7 @@ function showWeaponDetail(weapon, categoryKey) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
         // 특정 로고는 필터 제거 (원본 색상 유지)
-        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo'];
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo'];
         if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
