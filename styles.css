@@ -300,19 +300,40 @@ body {
 /* 능력치 섹션 */
 .weapon-stats-container {
     width: 100%;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding: 20px;
-    background: #1a1a1a;
-    border-radius: 10px;
-    border: 1px solid #333;
+    margin-top: 16px;
+}
+
+.weapon-stats-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.weapon-stats-spacer {
+    width: 72px; /* 비교 버튼과 균형 맞추기용 */
 }
 
 .weapon-stats-title {
+    flex: 1;
     text-align: center;
     font-weight: bold;
-    margin-bottom: 12px;
     color: #ffffff;
+    font-size: 28px; /* 총기 이름(36px)보다 살짝 작게 */
+}
+
+.weapon-compare-btn {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #ffffff;
+    background: transparent;
+    color: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.weapon-compare-btn:hover {
+    background: #ffffff22;
 }
 
 .weapon-stats-list {
@@ -322,23 +343,81 @@ body {
 }
 
 .weapon-stat-row {
-    display: flex;
-    justify-content: flex-start;
-    gap: 6px;
-    font-size: 14px;
+    display: block;
+    font-size: 16px; /* 설명 텍스트와 동일한 크기 */
+    line-height: 1.8;
     color: #ffffff;
 }
 
 .weapon-stat-label {
-    width: 80px;
-    text-align: right;
+    display: inline-block;
     opacity: 0.85;
-    padding-right: 4px;
+    margin-right: 4px;
 }
 
 .weapon-stat-value {
-    flex: 1;
+    display: inline-block;
+}
+
+.weapon-stat-bar {
+    width: 100%;
+    height: 8px;
+    background: #111111;
+    border-radius: 10px;
+    border: 1px solid #333333;
+    overflow: hidden;
+}
+
+.weapon-stat-bar-fill {
+    height: 100%;
+    background: #ffffff;
+}
+
+.weapon-stat-bar-compare .weapon-stat-bar-fill {
+    background: #888888;
+}
+
+.weapon-stat-bar-compare .weapon-stat-bar-fill.stat-better {
+    background: #27ae60;
+}
+
+.weapon-stat-bar-compare .weapon-stat-bar-fill.stat-worse {
+    background: #e74c3c;
+}
+
+/* 비교 모달 */
+.compare-desc {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.compare-current {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.compare-list {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.compare-weapon-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
     text-align: left;
+}
+
+.compare-weapon-item:hover {
+    background: #222222;
+}
 }
 
 .weapon-detail-actions {

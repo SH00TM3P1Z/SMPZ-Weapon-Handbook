@@ -15,7 +15,7 @@ let weaponsData = {
                 sway: "200",
                 ergonomics: "61",
                 accuracy: "1.24 MOA",
-                velocity: "x1.2",
+                velocity: "1020 m/s",
                 rpm: "900"
             }
         },
@@ -26,7 +26,15 @@ let weaponsData = {
             manufacturerLogo: "assets/colt-logo.png",
             manufacturerUrl: "https://www.colt.com/",
             image: "assets/m16a2.png",
-            description: "M16 플랫폼의 후기 발전형인 M16A2는 3점사 기능과 향상된 부품을 도입하여 제어성과 내구성을 크게 개선한 모델입니다. 5.56x45mm NATO 탄을 사용하며 1980~1990년대 동안 미군의 주요 제식 소총으로 운용되었습니다. 높은 정확도와 신뢰성으로 잘 알려져 있으며, 현대 돌격소총 설계의 기준점으로 평가받고 있습니다."
+            description: "M16 플랫폼의 후기 발전형인 M16A2는 3점사 기능과 향상된 부품을 도입하여 제어성과 내구성을 크게 개선한 모델입니다. 5.56x45mm NATO 탄을 사용하며 1980~1990년대 동안 미군의 주요 제식 소총으로 운용되었습니다. 높은 정확도와 신뢰성으로 잘 알려져 있으며, 현대 돌격소총 설계의 기준점으로 평가받고 있습니다.",
+            stats: {
+                recoil: "115",
+                sway: "200",
+                ergonomics: "47",
+                accuracy: "1.24 MOA",
+                velocity: "1020 m/s",
+                rpm: "900"
+            }
         },
         {
             id: "3",
@@ -35,7 +43,15 @@ let weaponsData = {
             manufacturerLogo: "assets/colt-logo.png",
             manufacturerUrl: "https://www.colt.com/",
             image: "assets/m4a1.png",
-            description: "Colt M4A1은 5.56x45mm NATO탄을 사용하는 AR-15를 기반으로 미국에서 개발된 돌격 소총(카빈) 입니다. 본디 일반 소총보다 가볍고 작으면서도 같은 탄약을 사용하는 소총이 필요한 차량 승무원들과 화력지원반을 위해 개발되었으나, US SOCOM(미합중국 특수작전사령부) 이 특수작전에서도 사용하기 적합할 것이라 생각하여 곧바로 모든 하위 부대에게 M4A1을 보급하였고, 이어 미 육군 및 해병대도 사용하기 시작했습니다."
+            description: "Colt M4A1은 5.56x45mm NATO탄을 사용하는 AR-15를 기반으로 미국에서 개발된 돌격 소총(카빈) 입니다. 본디 일반 소총보다 가볍고 작으면서도 같은 탄약을 사용하는 소총이 필요한 차량 승무원들과 화력지원반을 위해 개발되었으나, US SOCOM(미합중국 특수작전사령부) 이 특수작전에서도 사용하기 적합할 것이라 생각하여 곧바로 모든 하위 부대에게 M4A1을 보급하였고, 이어 미 육군 및 해병대도 사용하기 시작했습니다.",
+            stats: {
+                recoil: "115",
+                sway: "170",
+                ergonomics: "47",
+                accuracy: "1.82 MOA",
+                velocity: "850 m/s",
+                rpm: "900"
+            }
         },
         {
             id: "4",
@@ -44,7 +60,15 @@ let weaponsData = {
             manufacturerLogo: "assets/sigsauer-logo.png",
             manufacturerUrl: "https://www.sigsauer.com/",
             image: "assets/mcx.png",
-            description: ".300 블랙아웃 MCX 라인은 SIG Sauer에서 설계·제작한 모델로, 반자동과 완전 자동 버전 모두 존재합니다. 이 총기는 이전의 SIG MPX 기관단총에서 이어진 숏-스트로크 가스 피스톤 시스템을 특징으로 합니다. .300 블랙아웃 탄약과 MCX는 모든 AR-15 규격의 탄창과 호환됩니다."
+            description: ".300 블랙아웃 MCX 라인은 SIG Sauer에서 설계·제작한 모델로, 반자동과 완전 자동 버전 모두 존재합니다. 이 총기는 이전의 SIG MPX 기관단총에서 이어진 쇼트 스트로크 가스 피스톤 시스템을 특징으로 합니다. .300 블랙아웃 탄약과 MCX는 모든 AR-15 규격의 탄창과 호환됩니다.",
+            stats: {
+                recoil: "114",
+                sway: "120",
+                ergonomics: "62",
+                accuracy: "2.75 MOA",
+                velocity: "397 m/s",
+                rpm: "900"
+            }
         },
         {
             id: "5",
@@ -53,7 +77,15 @@ let weaponsData = {
             manufacturerLogo: "assets/sigsauer-logo.png",
             manufacturerUrl: "https://www.sigsauer.com/",
             image: "assets/mcxspear.png",
-            description: "MCX SPEAR는 SIG Sauer가 MCX 돌격소총을 기반으로 설계·제작한 다구경 돌격소총입니다. 기본적으로 새로운 6.8x51mm(.277 FURY) 탄을 사용하도록 제작되었으며, M4 카빈을 대체하도록 미군이 요구한 기준에 맞춰 특별히 설계되었습니다."
+            description: "MCX SPEAR는 SIG Sauer가 MCX 돌격소총을 기반으로 설계·제작한 다구경 돌격소총입니다. 기본적으로 새로운 6.8x51mm(.277 FURY) 탄을 사용하도록 제작되었으며, M4 카빈을 대체하도록 미군이 요구한 기준에 맞춰 특별히 설계되었습니다.",
+            stats: {
+                recoil: "125",
+                sway: "113",
+                ergonomics: "58",
+                accuracy: "1.43 MOA",
+                velocity: "988 m/s",
+                rpm: "900"
+            }
         },
         {
             id: "6",
@@ -62,7 +94,15 @@ let weaponsData = {
             manufacturerLogo: "assets/hk-logo.png",
             manufacturerUrl: "https://www.heckler-koch.com/en",
             image: "assets/hk416a5.png",
-            description: "HK416 A5는 헤클러 앤 코흐에서 제작한 5.56x45 mm NATO 탄을 사용하는 HK416 돌격 소총의 추가 개량된 모델입니다. 이전 버전과 비교하여 가장 인상적인 변화는 시장성이 좋은 AR 플랫폼을 탑재했다는 점입니다. 소음기를 사용할 때 도구 없이 가스 조절이 가능하게 개선된 가스 조절기를 탑재하였으며, 사용자를 위하여 재설계된 하부 총몸은 완벽한 양손 조작이 가능하게 최적화되었습니다. 또한 실제 작동 조건에서 사용자의 안전, 신뢰성, 탄창의 호환성 및 내구성 등 기술적인 부분이 많이 개선되었습니다."
+            description: "HK416 A5는 헤클러 앤 코흐에서 제작한 5.56x45 mm NATO 탄을 사용하는 HK416 돌격 소총의 추가 개량된 모델입니다. 이전 버전과 비교하여 가장 인상적인 변화는 시장성이 좋은 AR 플랫폼을 탑재했다는 점입니다. 소음기를 사용할 때 도구 없이 가스 조절이 가능하게 개선된 가스 조절기를 탑재하였으며, 사용자를 위하여 재설계된 하부 총몸은 완벽한 양손 조작이 가능하게 최적화되었습니다. 또한 실제 작동 조건에서 사용자의 안전, 신뢰성, 탄창의 호환성 및 내구성 등 기술적인 부분이 많이 개선되었습니다.",
+            stats: {
+                recoil: "113",
+                sway: "135",
+                ergonomics: "64",
+                accuracy: "1.93 MOA",
+                velocity: "850 m/s",
+                rpm: "1000"
+            }
         },
         {
             id: "7",
@@ -71,7 +111,15 @@ let weaponsData = {
             manufacturerLogo: "assets/radian-logo.png",
             manufacturerUrl: "https://www.radianweapons.com/",
             image: "assets/radianmodel1.png",
-            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다."
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다.",
+            stats: {
+                recoil: "102",
+                sway: "185",
+                ergonomics: "51",
+                accuracy: "1.66 MOA",
+                velocity: "918 m/s",
+                rpm: "900"
+            }
         },
         {
             id: "8",
@@ -80,7 +128,15 @@ let weaponsData = {
             manufacturerLogo: "assets/radian-logo.png",
             manufacturerUrl: "https://www.radianweapons.com/",
             image: "assets/radianmodel1.png",
-            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 모델은 풀 오토 기능을 갖춘 Talon 조정간이 탑재되어 있습니다."
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 모델은 풀 오토 기능을 갖춘 Talon 조정간이 탑재되어 있습니다.",
+            stats: {
+                recoil: "102",
+                sway: "185",
+                ergonomics: "51",
+                accuracy: "1.66 MOA",
+                velocity: "918 m/s",
+                rpm: "900"
+            }
         }
     ],
     "기관단총": [],
@@ -93,7 +149,8 @@ let weaponsData = {
 
 let isAdmin = false;
 let currentCategory = null;
-let currentWeapon = null; // 현재 선택된 무기
+let currentWeapon = null;           // 현재 선택된 무기
+let compareTarget = null;           // 비교 대상 무기 (선택 시)
 let editingWeaponId = null;
 
 // 페이지 로드 시 초기화
@@ -250,6 +307,8 @@ function renderWeaponsInSidebar(categoryKey, container) {
         li.style.cursor = 'pointer';
         li.addEventListener('click', (e) => {
             e.stopPropagation();
+            // 다른 무기를 선택하면 기존 비교 상태 초기화
+            compareTarget = null;
             showWeaponDetail(weapon, categoryKey);
         });
         container.appendChild(li);
@@ -260,6 +319,9 @@ function renderWeaponsInSidebar(categoryKey, container) {
 function showWeaponDetail(weapon, categoryKey) {
     const weaponDetail = document.getElementById('weaponDetail');
     
+    // 현재 기준 무기/카테고리 갱신
+    currentCategory = categoryKey;
+    currentWeapon = weapon;
     // 사이드바의 선택된 무기 하이라이트
     document.querySelectorAll('.weapon-item-sidebar').forEach(item => {
         item.classList.remove('active');
@@ -406,21 +468,51 @@ function showWeaponDetail(weapon, categoryKey) {
         const statsContainer = document.createElement('div');
         statsContainer.className = 'weapon-stats-container';
 
+        // 헤더: 제목 + 비교 버튼
+        const statsHeader = document.createElement('div');
+        statsHeader.className = 'weapon-stats-header';
+
+        const statsHeaderSpacer = document.createElement('div');
+        statsHeaderSpacer.className = 'weapon-stats-spacer';
+
         const statsTitle = document.createElement('div');
         statsTitle.className = 'weapon-stats-title';
         statsTitle.textContent = '- 능력치 -';
-        statsContainer.appendChild(statsTitle);
+
+        const compareBtn = document.createElement('button');
+        compareBtn.type = 'button';
+        compareBtn.className = 'weapon-compare-btn';
+        // 비교 대상이 설정되어 있으면 "비교 해제"로 표시
+        const hasCompare = !!(compareTarget && compareTarget.weapon);
+        compareBtn.textContent = hasCompare ? '비교 해제' : '비교';
+        compareBtn.onclick = () => {
+            if (compareTarget && compareTarget.weapon) {
+                // 비교 해제: 비교 대상 초기화 후 현재 무기 다시 렌더링
+                compareTarget = null;
+                showWeaponDetail(weapon, categoryKey);
+            } else {
+                // 비교 시작: 모달 열기
+                openCompareModal();
+            }
+        };
+
+        statsHeader.appendChild(statsHeaderSpacer);
+        statsHeader.appendChild(statsTitle);
+        statsHeader.appendChild(compareBtn);
+        statsContainer.appendChild(statsHeader);
 
         const statsList = document.createElement('div');
         statsList.className = 'weapon-stats-list';
 
+        // 각 능력치별 최대값과 스케일 정의
         const statsDefs = [
-            { key: 'recoil', label: '반동' },
-            { key: 'sway', label: '흔들림' },
-            { key: 'ergonomics', label: '인체공학' },
-            { key: 'accuracy', label: '명중률' },
-            { key: 'velocity', label: '탄속' },
-            { key: 'rpm', label: 'RPM' }
+            { key: 'recoil',      label: '반동',     max: 120,  invert: false },
+            { key: 'sway',        label: '흔들림',   max: 210,  invert: false },
+            { key: 'ergonomics',  label: '인체공학', max: 100,  invert: false },
+            // DayZ 소스코드 기준: 일반 무기는 maxMOA = 25.0
+            { key: 'accuracy',    label: '명중률',   max: 25.0, invert: true, isMoa: true },
+            { key: 'velocity',    label: '탄속',     max: 1200, invert: false },
+            { key: 'rpm',         label: 'RPM',      max: 1200, invert: false }
         ];
 
         statsDefs.forEach(stat => {
@@ -433,16 +525,122 @@ function showWeaponDetail(weapon, categoryKey) {
 
             const value = document.createElement('span');
             value.className = 'weapon-stat-value';
-            const v = weapon.stats[stat.key];
-            value.textContent = v !== undefined && v !== null && v !== "" ? v : '-';
+            const raw = weapon.stats[stat.key];
+            const displayText = raw !== undefined && raw !== null && raw !== "" ? String(raw) : '-';
+            value.textContent = displayText;
 
             row.appendChild(label);
             row.appendChild(value);
             statsList.appendChild(row);
+
+            // 게이지 바 계산 (기준 무기)
+            let numericValue = NaN;
+            if (raw !== undefined && raw !== null && raw !== "") {
+                if (stat.isMoa) {
+                    // "1.24 MOA" 같은 문자열에서 숫자만 추출
+                    const match = /([\d.]+)/.exec(String(raw));
+                    if (match) numericValue = parseFloat(match[1]);
+                } else {
+                    numericValue = parseFloat(raw);
+                }
+            }
+
+            let percent = 0;
+            if (!isNaN(numericValue) && stat.max > 0) {
+                if (stat.invert) {
+                    // 값이 낮을수록 좋은 경우 (예: MOA)
+                    percent = 100 - (numericValue / stat.max * 100);
+                } else {
+                    percent = (numericValue / stat.max) * 100;
+                }
+                percent = Math.max(0, Math.min(100, percent));
+            }
+
+            const bar = document.createElement('div');
+            bar.className = 'weapon-stat-bar';
+
+            const barFill = document.createElement('div');
+            barFill.className = 'weapon-stat-bar-fill';
+            barFill.style.width = `${percent}%`;
+
+            bar.appendChild(barFill);
+            statsList.appendChild(bar);
+
+            // 비교 대상이 있는 경우, 두 번째 게이지 바 추가
+            const compareWeapon = compareTarget && compareTarget.weapon ? compareTarget.weapon : null;
+            if (compareWeapon && compareWeapon.stats && compareWeapon.id !== weapon.id) {
+                const rawCompare = compareWeapon.stats[stat.key];
+                let numericCompare = NaN;
+                if (rawCompare !== undefined && rawCompare !== null && rawCompare !== "") {
+                    if (stat.isMoa) {
+                        const match2 = /([\d.]+)/.exec(String(rawCompare));
+                        if (match2) numericCompare = parseFloat(match2[1]);
+                    } else {
+                        numericCompare = parseFloat(rawCompare);
+                    }
+                }
+
+                let percentCompare = 0;
+                if (!isNaN(numericCompare) && stat.max > 0) {
+                    if (stat.invert) {
+                        percentCompare = 100 - (numericCompare / stat.max * 100);
+                    } else {
+                        percentCompare = (numericCompare / stat.max) * 100;
+                    }
+                    percentCompare = Math.max(0, Math.min(100, percentCompare));
+                }
+
+                let diffClass = '';
+                if (!isNaN(numericValue) && !isNaN(numericCompare)) {
+                    let better = false;
+                    let worse = false;
+
+                    // 반동, 흔들림, 명중률(MOA)은 값이 낮을수록 좋음
+                    if (stat.key === 'recoil' || stat.key === 'sway' || stat.isMoa) {
+                        better = percentCompare < percent;
+                        worse = percentCompare > percent;
+                    } else {
+                        // 나머지(인체공학, 탄속, RPM)는 값이 높을수록 좋음
+                        better = percentCompare > percent;
+                        worse = percentCompare < percent;
+                    }
+
+                    if (better) {
+                        diffClass = 'better';
+                    } else if (worse) {
+                        diffClass = 'worse';
+                    } else {
+                        diffClass = 'equal';
+                    }
+                }
+
+                const compareBar = document.createElement('div');
+                compareBar.className = 'weapon-stat-bar weapon-stat-bar-compare';
+
+                const compareFill = document.createElement('div');
+                compareFill.className = 'weapon-stat-bar-fill';
+                if (diffClass) {
+                    compareFill.classList.add(`stat-${diffClass}`);
+                }
+                compareFill.style.width = `${percentCompare}%`;
+
+                compareBar.appendChild(compareFill);
+                statsList.appendChild(compareBar);
+            }
         });
 
         statsContainer.appendChild(statsList);
-        detailCard.appendChild(statsContainer);
+
+        // 설명 박스와 완전히 같은 폭으로 보이도록,
+        // 설명 컨테이너 안에 능력치 섹션을 넣는다.
+        const statsParent = weapon.description
+            ? detailCard.querySelector('.weapon-detail-description-container')
+            : detailCard;
+        if (statsParent) {
+            statsParent.appendChild(statsContainer);
+        } else {
+            detailCard.appendChild(statsContainer);
+        }
     }
     
     // 관리자 모드일 경우 편집/삭제 버튼 표시
@@ -466,8 +664,6 @@ function showWeaponDetail(weapon, categoryKey) {
     }
     
     weaponDetail.appendChild(detailCard);
-    currentCategory = categoryKey;
-    currentWeapon = weapon;
 }
 
 // 무기 상세 정보 초기화
@@ -738,4 +934,49 @@ function deleteWeapon(weaponId, categoryKey) {
         clearWeaponDetail();
         alert('무기가 삭제되었습니다.');
     }
+}
+
+// 능력치 비교 모달 열기
+function openCompareModal() {
+    const modal = document.getElementById('compareModal');
+    const listContainer = document.getElementById('compareWeaponList');
+    const currentLabel = document.getElementById('compareCurrentWeapon');
+
+    if (!modal || !listContainer) return;
+    if (!currentWeapon) {
+        alert('먼저 기준이 될 무기를 선택해주세요.');
+        return;
+    }
+
+    listContainer.innerHTML = '';
+    if (currentLabel) {
+        // 기준 무기 표시는 이름만 사용 (이름 안에 제조사가 포함될 수 있으므로)
+        currentLabel.textContent = `기준 무기: ${currentWeapon.name}`;
+    }
+
+    // 모든 카테고리의 무기 목록을 모아서 표시
+    Object.keys(weaponsData).forEach(categoryKey => {
+        const list = weaponsData[categoryKey] || [];
+        list.forEach(w => {
+            // 스탯이 있는 무기만 대상, 자기 자신 제외
+            if (!w.stats || (currentWeapon && w.id === currentWeapon.id)) return;
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'compare-weapon-item';
+            // 비교 목록에는 총기 이름만 표기 (이미 이름에 제조사가 포함될 수 있음)
+            btn.textContent = w.name;
+            btn.onclick = () => {
+                compareTarget = { weapon: w, categoryKey };
+                modal.style.display = 'none';
+                // 현재 무기를 다시 렌더링하여 비교 바를 표시
+                if (currentWeapon && currentCategory) {
+                    showWeaponDetail(currentWeapon, currentCategory);
+                }
+            };
+            listContainer.appendChild(btn);
+        });
+    });
+
+    modal.style.display = 'block';
 }
