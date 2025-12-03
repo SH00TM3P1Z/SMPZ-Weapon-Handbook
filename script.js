@@ -1,6 +1,75 @@
 // 데이터 저장소 (실제로는 서버나 로컬스토리지 사용)
 let weaponsData = {
-    "권총": [],
+    "권총": [
+        {
+            id: "1",
+            name: "Serdyukov SR-1MP Gyurza",
+            manufacturer: "Serdyukov",
+            manufacturerLogo: "assets/TsNIITochMash-logo.png",
+            manufacturerUrl: "",
+            image: "assets/sr1mp.png",
+            description: "SR-1MP 권총(그라우 지수 6P53)은 ‘규르자(Gyurza, 독사)’ 또는 SPS(Serdyukov Semiautomatic Pistol)로도 알려져 있으며, 세르듀코프(P. Serdyukov)와 벨랴예프(I. Belyaev)가 강력한 9x21mm 탄을 사용하도록 설계한 모델입니다. 이 권총은 러시아 연방 특수부대가 사용하던 APS 기관권총을 대체하기 위해 개발되었습니다. SR-1MP는 추가 장비를 장착하기 위한 마운트 세트를 부착할 수 있으며, 소음기 설치용 기반으로도 활용될 수 있습니다.",
+            stats: {
+                recoil: "80",
+                sway: "80",
+                ergonomics: "85",
+                accuracy: "7.49 MOA",
+                velocity: "413 m/s",
+                rpm: "480"
+            }
+        },
+        {
+            id: "2",
+            name: "Magnum Research Desert Eagle L6",
+            manufacturer: "Magnum Research",
+            manufacturerLogo: "assets/magnumresearch-logo.png",
+            manufacturerUrl: "https://www.magnumresearch.com/",
+            image: "assets/deaglel6.png",
+            description: "데저트 이글 L6는 Magnum Research가 제작한 .50 액션 익스프레스(.50 AE) 탄을 사용하는 스포츠·헌팅용 권총의 개량형입니다. 이 권총은 크고 무거우며, 실사용 면에서 가장 실용적이지는 않지만, 다른 어떤 권총과도 비교할 수 없는 독특한 형태를 지녀 그 거대한 외형과 위압감 덕분에 수많은 비디오 게임에서 자주 등장하는 아이콘이 되었습니다. 군용 채택에는 실패했지만, 세계에서 가장 유명한 권총 중 하나라는 명성은 충분히 누리고 있습니다.",
+            stats: {
+                recoil: "120",
+                sway: "116",
+                ergonomics: "85",
+                accuracy: "10.31 MOA",
+                velocity: "440 m/s",
+                rpm: "375"
+            }
+        },
+        {
+            id: "3",
+            name: "Magnum Research Desert Eagle L5 .50 AE",
+            manufacturer: "Magnum Research",
+            manufacturerLogo: "assets/magnumresearch-logo.png",
+            manufacturerUrl: "https://www.magnumresearch.com/",
+            image: "assets/deaglel5_50ae.png",
+            description: "데저트 이글 L5는 Magnum Research가 제작한 .50 액션 익스프레스(.50 AE) 탄을 사용하는 스포츠·헌팅용 권총의 개량형입니다. 이 권총은 크고 무거우며, 실사용 면에서 가장 실용적이지는 않지만, 다른 어떤 권총과도 비교할 수 없는 독특한 형태를 지녀 그 거대한 외형과 위압감 덕분에 수많은 비디오 게임에서 자주 등장하는 아이콘이 되었습니다. 군용 채택에는 실패했지만, 세계에서 가장 유명한 권총 중 하나라는 명성은 충분히 누리고 있습니다.",
+            stats: {
+                recoil: "150",
+                sway: "116",
+                ergonomics: "85",
+                accuracy: "8.25 MOA",
+                velocity: "440 m/s",
+                rpm: "375"
+            }
+        },
+        {
+            id: "4",
+            name: "Magnum Research Desert Eagle L5 .357",
+            manufacturer: "Magnum Research",
+            manufacturerLogo: "assets/magnumresearch-logo.png",
+            manufacturerUrl: "https://www.magnumresearch.com/",
+            image: "assets/deaglel5_357.png",
+            description: "데저트 이글 L5는 Magnum Research가 제작한 .357 매그넘 탄을 사용하는 스포츠·헌팅용 권총의 개량형입니다. 이 권총은 크고 무거우며, 실사용 면에서 가장 실용적이지는 않지만, 다른 어떤 권총과도 비교할 수 없는 독특한 형태를 지녀 그 거대한 외형과 위압감 덕분에 수많은 비디오 게임에서 자주 등장하는 아이콘이 되었습니다. 군용 채택에는 실패했지만, 세계에서 가장 유명한 권총 중 하나라는 명성은 충분히 누리고 있습니다.",
+            stats: {
+                recoil: "117",
+                sway: "116",
+                ergonomics: "85",
+                accuracy: "8.94 MOA",
+                velocity: "440 m/s",
+                rpm: "375"
+            }
+        }
+    ],
     "돌격 소총": [
         {
             id: "1",
@@ -139,7 +208,25 @@ let weaponsData = {
             }
         }
     ],
-    "기관단총": [],
+    "기관단총": [
+        {
+            id: "1",
+            name: "SIG MPX",
+            manufacturer: "SIG Sauer",
+            manufacturerLogo: "assets/sigsauer-logo.png",
+            manufacturerUrl: "https://www.sigsauer.com/",
+            image: "assets/mpx.png",
+            description: "SIG MPX는 SIG Sauer가 제작한 빠른 발사속도를 자랑하고, 기존의 AR 계열 총기와 유사한 외형을 지닌 기관단총입니다. SIG MPX는 쇼트-스트로크 가스 피스톤 작동 방식을 사용하여 가스 조절기의 조정 없이 다양한 9mm 탄종 사용이 가능합니다. 풀사이즈의 마운트는 다양한 종류의 조준경과 조준기 장치들을 설치할 수 있게 해줍니다.",
+            stats: {
+                recoil: "107",
+                sway: "120",
+                ergonomics: "72",
+                accuracy: "5 MOA",
+                velocity: "374 m/s",
+                rpm: "923"
+            }
+        }
+    ],
     "저격 소총": [
         {
             id: "1",
@@ -195,7 +282,25 @@ let weaponsData = {
     ],
     "산탄총": [],
     "경기관총": [],
-    "유탄 발사기": [],
+    "유탄 발사기": [
+        {
+            id: "1",
+            name: "Milkor M32A1",
+            manufacturer: "Milkor USA",
+            manufacturerLogo: "assets/milkor-logo.png",
+            manufacturerUrl: "https://www.milkorusa.com/",
+            image: "assets/m32.png",
+            description: "M32A1 MSGL은 Milkor USA에서 제조한 40mm 6연발 유탄 발사기입니다. M32의 실린더는 리볼버 방식의 검증된 구조를 사용해, 빠른 조준 사격과 높은 명중률을 동시에 구현합니다.",
+            stats: {
+                recoil: "550",
+                sway: "200",
+                ergonomics: "51",
+                accuracy: "16.5 MOA",
+                velocity: "76 m/s",
+                rpm: "750"
+            }
+        }
+    ],
     "특수": []
 };
 
@@ -398,8 +503,9 @@ function showWeaponDetail(weapon, categoryKey) {
     if (weapon.manufacturerLogo) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
-        // Accuracy International 로고는 필터 제거 (원본 색상 유지)
-        if (weapon.manufacturerLogo.includes('ai-logo')) {
+        // 특정 로고는 필터 제거 (원본 색상 유지)
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo'];
+        if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
         logoImg.src = weapon.manufacturerLogo;
