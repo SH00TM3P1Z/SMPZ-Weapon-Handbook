@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMPZ 웨폰 도감</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 좌측 사이드바 -->
+        <aside class="sidebar">
+            <h1 class="sidebar-title">SMPZ 웨폰 도감</h1>
+            <ul class="category-list" id="categoryList">
+                <!-- 카테고리 목록이 여기에 동적으로 추가됩니다 -->
+            </ul>
+            
+            <!-- 관리자 로그인 버튼 -->
+            <div class="admin-section">
+                <button id="adminLoginBtn" class="admin-btn">관리자 로그인</button>
+                <button id="adminLogoutBtn" class="admin-btn" style="display: none;">로그아웃</button>
+            </div>
+        </aside>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <main class="main-content">
+            <div class="weapon-detail" id="weaponDetail">
+                <p class="empty-message">좌측에서 카테고리를 선택하고 무기를 클릭하여 정보를 확인하세요.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- 관리자 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>관리자 로그인</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">사용자명:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">비밀번호:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">로그인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 무기 추가/수정 모달 -->
+    <div id="weaponModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="weaponModalTitle">무기 추가</h2>
+            <form id="weaponForm">
+                <input type="hidden" id="weaponId">
+                <div class="form-group">
+                    <label for="weaponName">무기 이름:</label>
+                    <input type="text" id="weaponName" required>
+                </div>
+                <div class="form-group">
+                    <label for="weaponCategory">카테고리:</label>
+                    <select id="weaponCategory" required>
+                        <option value="">선택하세요</option>
+                        <option value="권총">권총</option>
+                        <option value="돌격 소총">돌격 소총</option>
+                        <option value="기관단총">기관단총</option>
+                        <option value="저격 소총">저격 소총</option>
+                        <option value="산탄총">산탄총</option>
+                        <option value="경기관총">경기관총</option>
+                        <option value="발사기">발사기</option>
+                        <option value="특수">특수</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="weaponManufacturer">제조사 (선택사항):</label>
+                    <input type="text" id="weaponManufacturer" placeholder="예: Colt">
+                </div>
+                <div class="form-group">
+                    <label for="weaponManufacturerLogo">제조사 로고 경로 (선택사항):</label>
+                    <input type="text" id="weaponManufacturerLogo" placeholder="예: assets/colt-logo.png">
+                </div>
+                <div class="form-group">
+                    <label for="weaponManufacturerUrl">제조사 사이트 URL (선택사항):</label>
+                    <input type="url" id="weaponManufacturerUrl" placeholder="예: https://www.colt.com/">
+                </div>
+                <div class="form-group">
+                    <label for="weaponImage">이미지 경로 (선택사항):</label>
+                    <input type="text" id="weaponImage" placeholder="예: assets/m16a1.png">
+                </div>
+                <div class="form-group">
+                    <label for="weaponDescription">설명 (선택사항):</label>
+                    <textarea id="weaponDescription" rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">저장</button>
+                    <button type="button" class="cancel-btn" onclick="closeWeaponModal()">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 이미지 확대 모달 -->
+    <div id="imageModal" class="modal image-modal">
+        <span class="close-image">&times;</span>
+        <img id="modalImage" class="modal-image-content" src="" alt="">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
