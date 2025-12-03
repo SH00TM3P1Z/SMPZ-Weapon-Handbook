@@ -140,7 +140,59 @@ let weaponsData = {
         }
     ],
     "기관단총": [],
-    "저격 소총": [],
+    "저격 소총": [
+        {
+            id: "1",
+            name: "Accuracy International AXMC",
+            manufacturer: "Accuracy International",
+            manufacturerLogo: "assets/ai-logo.png",
+            manufacturerUrl: "https://www.accuracyinternational.com/",
+            image: "assets/axmc.png",
+            description: "AXMC는 영국의 Accuracy International사가 설계·제작해 오며 실전에서 입증된 저격소총 계열의 최신 모델입니다. 기본적으로 .338 라푸아 매그넘 탄을 사용하지만, 총열·노리쇠·탄창(또는 삽입구)를 교체하면 .300 윈체스터 매그넘과 .308 윈체스터로도 빠르게 전환할 수 있습니다.",
+            stats: {
+                recoil: "220",
+                sway: "150",
+                ergonomics: "33",
+                accuracy: "0.37 MOA",
+                velocity: "1144 m/s",
+                rpm: "60"
+            }
+        },
+        {
+            id: "2",
+            name: "SWORD International Mk-18 Mjölnir",
+            manufacturer: "SWORD Defense Systems",
+            manufacturerLogo: "assets/sword-logo.png",
+            manufacturerUrl: "https://sworddefense.com/",
+            image: "assets/mk18.png",
+            description: "Mk-18 Mod 1 Extreme Distance Capable Semi-Automatic Rifle은 SWORD Defense Systems(구 SWORD International)이 제작한 .338 라푸아 매그넘, .338 노르마 매그넘, .300 노르마 매그넘 탄의 탄도 성능을 최대한 활용하도록 설계된 반자동 소총입니다. 이 시스템은 경량이면서도 기동성이 뛰어난 반자동 플랫폼에서 극장거리 사격 능력을 제공합니다. SWORD 고유의 쇼트 스트로크 가스 피스톤 시스템을 적용해 높은 정밀도, 신뢰성, 내구성을 갖추었으며, 양손 조작이 가능한 컨트롤과 인체공학적 설계, 모듈화 구조를 특징으로 합니다. Mk-18은 사냥꾼, 장거리 사격 애호가, 경기 사수들에게 훌륭한 선택지로 평가됩니다.",
+            stats: {
+                recoil: "250",
+                sway: "150",
+                ergonomics: "32",
+                accuracy: "0.57 MOA",
+                velocity: "1126 m/s",
+                rpm: "380"
+            }
+        },
+        {
+            id: "3",
+            name: "Sako TRG M10",
+            manufacturer: "Sako",
+            manufacturerLogo: "assets/sako-logo.png",
+            manufacturerUrl: "https://www.sako.global/",
+            image: "assets/trgm10.png",
+            description: "TRG M10은 Beretta Defense Technologies 그룹에 속한 Sako가 제작한 .338 라푸아 매그넘 탄을 사용하는 정밀 볼트액션 저격소총입니다. TRG M10은 매우 다재다능한 플랫폼으로, 본격적인 장거리 소총에서 더 컴팩트한 무기로 쉽게 전환할 수 있습니다. 이 소총은 여러 국가의 군, 경찰, 그리고 다양한 특수부대에서 사용하도록 설계되었습니다. Beretta Defense Technologies 그룹에 속한 Sako입니다.",
+            stats: {
+                recoil: "200",
+                sway: "130",
+                ergonomics: "41",
+                accuracy: "0.46 MOA",
+                velocity: "1100 m/s",
+                rpm: "60"
+            }
+        }
+    ],
     "산탄총": [],
     "경기관총": [],
     "유탄 발사기": [],
@@ -346,6 +398,10 @@ function showWeaponDetail(weapon, categoryKey) {
     if (weapon.manufacturerLogo) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
+        // Accuracy International 로고는 필터 제거 (원본 색상 유지)
+        if (weapon.manufacturerLogo.includes('ai-logo')) {
+            logoImg.classList.add('logo-no-filter');
+        }
         logoImg.src = weapon.manufacturerLogo;
         logoImg.alt = weapon.manufacturer || '';
         

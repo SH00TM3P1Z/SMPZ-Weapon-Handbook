@@ -199,6 +199,11 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* 특정 로고는 필터 제거 (원본 색상 유지) */
+.weapon-manufacturer-logo.logo-no-filter {
+    filter: none;
+}
+
 .weapon-detail-name a {
     text-decoration: none;
     display: inline-flex;
