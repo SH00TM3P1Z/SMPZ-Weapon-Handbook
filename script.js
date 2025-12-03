@@ -85,6 +85,7 @@ let weaponsData = {
 
 let isAdmin = false;
 let currentCategory = null;
+let currentWeapon = null; // 현재 선택된 무기
 let editingWeaponId = null;
 
 // 페이지 로드 시 초기화
@@ -414,6 +415,7 @@ function showWeaponDetail(weapon, categoryKey) {
     
     weaponDetail.appendChild(detailCard);
     currentCategory = categoryKey;
+    currentWeapon = weapon;
 }
 
 // 무기 상세 정보 초기화
@@ -530,7 +532,10 @@ function handleLogin(e) {
         document.getElementById('adminLogoutBtn').style.display = 'block';
         document.getElementById('loginModal').style.display = 'none';
         
-        // 현재 표시된 무기 정보 유지 (관리자 버튼만 표시)
+        // 현재 선택된 무기가 있다면 즉시 다시 렌더링해서 수정/삭제 버튼 표시
+        if (currentWeapon && currentCategory) {
+            showWeaponDetail(currentWeapon, currentCategory);
+        }
         
         alert('관리자로 로그인되었습니다.');
     } else {
@@ -544,7 +549,10 @@ function logout() {
     document.getElementById('adminLoginBtn').style.display = 'block';
     document.getElementById('adminLogoutBtn').style.display = 'none';
     
-    // 현재 표시된 무기 정보 유지
+    // 현재 선택된 무기가 있다면 다시 렌더링해서 수정/삭제 버튼 제거
+    if (currentWeapon && currentCategory) {
+        showWeaponDetail(currentWeapon, currentCategory);
+    }
     
     alert('로그아웃되었습니다.');
 }
