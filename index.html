@@ -10,7 +10,16 @@
     <div class="container">
         <!-- 좌측 사이드바 -->
         <aside class="sidebar">
-            <h1 class="sidebar-title">SMPZ 웨폰 도감</h1>
+            <h1 class="sidebar-title">
+                <img src="assets/doc.png" alt="도감" class="sidebar-title-icon">
+                <span>SMPZ 웨폰 도감</span>
+            </h1>
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <img src="assets/search.png" alt="검색" class="search-icon">
+                    <input type="text" id="weaponSearch" class="weapon-search-input" placeholder="무기 검색...">
+                </div>
+            </div>
             <ul class="category-list" id="categoryList">
                 <!-- 카테고리 목록이 여기에 동적으로 추가됩니다 -->
             </ul>
@@ -70,7 +79,7 @@
                         <option value="저격 소총">저격 소총</option>
                         <option value="산탄총">산탄총</option>
                         <option value="경기관총">경기관총</option>
-                        <option value="발사기">발사기</option>
+                        <option value="유탄 발사기">유탄 발사기</option>
                         <option value="특수">특수</option>
                     </select>
                 </div>

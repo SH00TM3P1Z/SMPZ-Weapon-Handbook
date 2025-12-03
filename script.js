@@ -3,6 +3,7 @@ let weaponsData = {
     "권총": [
         {
             id: "1",
+            keyword: "세르듀코프 규르자 굴자 결자 ",
             name: "Serdyukov SR-1MP Gyurza",
             manufacturer: "Serdyukov",
             manufacturerLogo: "assets/TsNIITochMash-logo.png",
@@ -20,6 +21,7 @@ let weaponsData = {
         },
         {
             id: "2",
+            keyword: "데저트 이글 엘6 데저트 이글 엘식 엘식 엘식 데글 디글",
             name: "Magnum Research Desert Eagle L6",
             manufacturer: "Magnum Research",
             manufacturerLogo: "assets/magnumresearch-logo.png",
@@ -37,6 +39,7 @@ let weaponsData = {
         },
         {
             id: "3",
+            keyword: "데저트 이글 엘5 데저트 이글 엘식 엘식 엘식 데글 디글",
             name: "Magnum Research Desert Eagle L5 .50 AE",
             manufacturer: "Magnum Research",
             manufacturerLogo: "assets/magnumresearch-logo.png",
@@ -54,6 +57,7 @@ let weaponsData = {
         },
         {
             id: "4",
+            keyword: "데저트 이글 엘5 데저트 이글 엘식 엘식 엘식 데글 디글",
             name: "Magnum Research Desert Eagle L5 .357",
             manufacturer: "Magnum Research",
             manufacturerLogo: "assets/magnumresearch-logo.png",
@@ -73,6 +77,7 @@ let weaponsData = {
     "돌격 소총": [
         {
             id: "1",
+            keyword: "콜트 칼트 엠심육에이원 예비군",
             name: "Colt M16A1",
             manufacturer: "Colt",
             manufacturerLogo: "assets/colt-logo.png",
@@ -90,6 +95,7 @@ let weaponsData = {
         },
         {
             id: "2",
+            keyword: "콜트 칼트 엠심육에이투 예비군",
             name: "Colt M16A2",
             manufacturer: "Colt",
             manufacturerLogo: "assets/colt-logo.png",
@@ -107,6 +113,7 @@ let weaponsData = {
         },
         {
             id: "3",
+            keyword: "콜트 칼트 엠포 엠포에이원",
             name: "Colt M4A1",
             manufacturer: "Colt",
             manufacturerLogo: "assets/colt-logo.png",
@@ -124,6 +131,7 @@ let weaponsData = {
         },
         {
             id: "4",
+            keyword: "시그 시그 사우어 지그 사우어 지그 자우어 엠씨엑스 블랙아웃",
             name: "SIG MCX",
             manufacturer: "SIG Sauer",
             manufacturerLogo: "assets/sigsauer-logo.png",
@@ -141,6 +149,7 @@ let weaponsData = {
         },
         {
             id: "5",
+            keyword: "시그 시그 사우어 지그 사우어 지그 자우어 스피어 68 육팔 퓨리",
             name: "SIG MCX-SPEAR",
             manufacturer: "SIG Sauer",
             manufacturerLogo: "assets/sigsauer-logo.png",
@@ -158,6 +167,7 @@ let weaponsData = {
         },
         {
             id: "6",
+            keyword: "에이치케이 흥국 흥국416 김흥국 헤클러 앤 코흐",
             name: "HK 416A5",
             manufacturer: "Heckler & Koch",
             manufacturerLogo: "assets/hk-logo.png",
@@ -469,6 +479,30 @@ function createCategoryItem(name, count, key) {
     const link = document.createElement('div');
     link.className = 'category-link';
     link.dataset.category = key;
+    
+    // 카테고리별 아이콘 매핑
+    const categoryIcons = {
+        '권총': 'assets/pistol.png',
+        '돌격 소총': 'assets/ar.png',
+        '기관단총': 'assets/smg.png',
+        '저격 소총': 'assets/sr.png',
+        '산탄총': 'assets/shotgun.png',
+        '경기관총': 'assets/lmg.png',
+        '유탄 발사기': 'assets/gl.png'
+    };
+    
+    // 아이콘 추가 (해당 카테고리에 아이콘이 있는 경우)
+    if (categoryIcons[key]) {
+        const iconImg = document.createElement('img');
+        iconImg.src = categoryIcons[key];
+        iconImg.alt = name;
+        iconImg.className = 'category-icon';
+        // 돌격 소총, 기관단총, 저격 소총 아이콘은 더 크게
+        if (key === '돌격 소총' || key === '기관단총' || key === '저격 소총' || key === '산탄총' || key === '경기관총' || key === '유탄 발사기') {
+            iconImg.classList.add('category-icon-large');
+        }
+        link.appendChild(iconImg);
+    }
     
     const nameSpan = document.createElement('span');
     nameSpan.className = 'category-name';
@@ -941,6 +975,14 @@ function setupEventListeners() {
     // 무기 폼
     document.getElementById('weaponForm').addEventListener('submit', handleWeaponSubmit);
     
+    // 검색창 이벤트 리스너
+    const searchInput = document.getElementById('weaponSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchWeapons(e.target.value);
+        });
+    }
+    
     // 모달 닫기
     document.querySelectorAll('.close').forEach(closeBtn => {
         closeBtn.addEventListener('click', (e) => {
@@ -1226,4 +1268,104 @@ function openCompareModal() {
     });
 
     modal.style.display = 'block';
+}
+
+// 무기 검색 함수
+function searchWeapons(query) {
+    const categoryList = document.getElementById('categoryList');
+    
+    if (!query || query.trim() === '') {
+        // 검색어가 비어있으면 일반 카테고리 목록 표시
+        renderCategories();
+        return;
+    }
+    
+    const searchTerm = query.trim().toLowerCase();
+    const results = [];
+    
+    // 모든 카테고리에서 검색
+    Object.keys(weaponsData).forEach(categoryKey => {
+        const weapons = weaponsData[categoryKey] || [];
+        weapons.forEach(weapon => {
+            // 이름 검색 (대소문자 구분 없음)
+            const nameMatch = weapon.name.toLowerCase().includes(searchTerm);
+            
+            // 키워드 검색 (대소문자 구분 없음)
+            const keywordMatch = weapon.keyword && 
+                weapon.keyword.toLowerCase().includes(searchTerm);
+            
+            if (nameMatch || keywordMatch) {
+                results.push({ weapon, categoryKey });
+            }
+        });
+    });
+    
+    // 검색 결과 표시
+    categoryList.innerHTML = '';
+    
+    if (results.length === 0) {
+        const noResult = document.createElement('li');
+        noResult.className = 'category-item';
+        noResult.innerHTML = '<div class="category-link" style="justify-content: center;"><span class="category-name">검색 결과가 없습니다</span></div>';
+        categoryList.appendChild(noResult);
+    } else {
+        // 검색 결과를 카테고리별로 그룹화
+        const groupedResults = {};
+        results.forEach(({ weapon, categoryKey }) => {
+            if (!groupedResults[categoryKey]) {
+                groupedResults[categoryKey] = [];
+            }
+            groupedResults[categoryKey].push(weapon);
+        });
+        
+        // 각 카테고리별로 표시
+        Object.keys(groupedResults).forEach(categoryKey => {
+            const weapons = groupedResults[categoryKey];
+            const categoryName = categoryKey === 'all' ? '무기' : categoryKey;
+            
+            const li = document.createElement('li');
+            li.className = 'category-item';
+            li.dataset.category = categoryKey;
+            
+            const link = document.createElement('div');
+            link.className = 'category-link';
+            link.dataset.category = categoryKey;
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'category-name';
+            nameSpan.textContent = categoryName;
+            
+            const countSpan = document.createElement('span');
+            countSpan.className = 'category-count';
+            countSpan.textContent = `(${weapons.length})`;
+            
+            link.appendChild(nameSpan);
+            link.appendChild(countSpan);
+            li.appendChild(link);
+            
+            // 무기 목록 컨테이너
+            const weaponListContainer = document.createElement('ul');
+            weaponListContainer.className = 'weapon-list-sidebar';
+            weaponListContainer.style.display = 'block'; // 검색 결과는 자동으로 펼침
+            
+            // 무기 목록 렌더링
+            weapons.forEach(weapon => {
+                const weaponLi = document.createElement('li');
+                weaponLi.className = 'weapon-item-sidebar';
+                weaponLi.textContent = weapon.name;
+                weaponLi.dataset.weaponId = weapon.id;
+                weaponLi.dataset.categoryKey = categoryKey;
+                weaponLi.style.cursor = 'pointer';
+                weaponLi.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    compareTarget = null;
+                    showWeaponDetail(weapon, categoryKey);
+                });
+                weaponListContainer.appendChild(weaponLi);
+            });
+            
+            li.appendChild(weaponListContainer);
+            categoryList.appendChild(li);
+        });
+    }
 }
