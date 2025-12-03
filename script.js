@@ -95,7 +95,7 @@ let weaponsData = {
             manufacturerLogo: "assets/colt-logo.png",
             manufacturerUrl: "https://www.colt.com/",
             image: "assets/m16a2.png",
-            description: "M16 플랫폼의 후기 발전형인 M16A2는 3점사 기능과 향상된 부품을 도입하여 제어성과 내구성을 크게 개선한 모델입니다. 5.56x45mm NATO 탄을 사용하며 1980~1990년대 동안 미군의 주요 제식 소총으로 운용되었습니다. 높은 정확도와 신뢰성으로 잘 알려져 있으며, 현대 돌격소총 설계의 기준점으로 평가받고 있습니다.",
+            description: "M16 플랫폼의 후기 발전형인 M16A2는 3점사 기능과 향상된 부품을 도입하여 제어성과 내구성을 크게 개선한 모델입니다. 5.56x45mm NATO 탄을 사용하며 1980~1990년대 동안 미군의 주요 제식 소총으로 운용되었습니다. 높은 정확도와 신뢰성으로 잘 알려져 있으며, 현대 돌격 소총 설계의 기준점으로 평가받고 있습니다.",
             stats: {
                 recoil: "115",
                 sway: "200",
@@ -146,7 +146,7 @@ let weaponsData = {
             manufacturerLogo: "assets/sigsauer-logo.png",
             manufacturerUrl: "https://www.sigsauer.com/",
             image: "assets/mcxspear.png",
-            description: "MCX SPEAR는 SIG Sauer가 MCX 돌격소총을 기반으로 설계·제작한 다구경 돌격소총입니다. 기본적으로 새로운 6.8x51mm(.277 FURY) 탄을 사용하도록 제작되었으며, M4 카빈을 대체하도록 미군이 요구한 기준에 맞춰 특별히 설계되었습니다.",
+            description: "MCX SPEAR는 SIG Sauer가 MCX 돌격 소총을 기반으로 설계·제작한 다구경 돌격 소총입니다. 기본적으로 새로운 6.8x51mm(.277 FURY) 탄을 사용하도록 제작되었으며, M4 카빈을 대체하도록 미군이 요구한 기준에 맞춰 특별히 설계되었습니다.",
             stats: {
                 recoil: "125",
                 sway: "113",
@@ -206,6 +206,23 @@ let weaponsData = {
                 velocity: "918 m/s",
                 rpm: "900"
             }
+        },
+        {
+            id: "9",
+            name: "Steyr AUG A3",
+            manufacturer: "Steyr Mannlicher",
+            manufacturerLogo: "assets/steyr-logo.png",
+            manufacturerUrl: "https://www.steyr-arms.com/en/",
+            image: "assets/auga3.png",
+            description: "Steyr AUG A3는 오스트리아의 Steyr-Daimler-Puch에서 개발한 5.56x45mm 불펍 돌격 소총입니다. AUG는 우수한 인체공학적 설계, 준수한 명중률, 낮은 반동, 그리고 충분한 신뢰성으로 잘 알려져 있으며, 미래지향적인 디자인이 특징입니다. 또한 A3 버전에는 노리쇠 멈치가 탑재되어있습니다.",
+            stats: {
+                recoil: "100",
+                sway: "40",
+                ergonomics: "81",
+                accuracy: "1.58 MOA",
+                velocity: "850 m/s",
+                rpm: "715"
+            }
         }
     ],
     "기관단총": [
@@ -223,6 +240,23 @@ let weaponsData = {
                 ergonomics: "72",
                 accuracy: "5 MOA",
                 velocity: "374 m/s",
+                rpm: "923"
+            }
+        },
+        {
+            id: "2",
+            name: "FN P90",
+            manufacturer: "FN Herstal",
+            manufacturerLogo: "assets/fnherstal-logo.png",
+            manufacturerUrl: "https://www.fnherstal.com/",
+            image: "assets/p90.png",
+            description: "FN Project 1990으로도 알려진 FN P90은 소형 개인방어화기(PDW)로 설계되었으며, 벨기에의 Fabrique Nationale Herstal(FN)에서 제작했습니다. 9x19mm Parabellum 탄을 사용하는 화기를 교체하려는 NATO의 요청에 따라, P90은 차량 승무원과 승무원 보조 인원, 지원부대, 특수부대, 그리고 대테러부대를 위해 작지만 강력한 화기로 만들어졌습니다.",
+            stats: {
+                recoil: "68",
+                sway: "50",
+                ergonomics: "78",
+                accuracy: "3.75 MOA",
+                velocity: "607 m/s",
                 rpm: "923"
             }
         }
@@ -504,7 +538,7 @@ function showWeaponDetail(weapon, categoryKey) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
         // 특정 로고는 필터 제거 (원본 색상 유지)
-        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo'];
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo'];
         if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
