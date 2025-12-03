@@ -525,8 +525,8 @@ function handleLogin(e) {
     const password = document.getElementById('password').value;
     
     // 간단한 인증 (실제로는 서버에서 처리해야 함)
-    // 기본 관리자 계정: admin / admin123
-    if (username === 'admin' && password === 'admin123') {
+    // 기본 관리자 계정: admin / 488538
+    if (username === 'admin' && password === '488538') {
         isAdmin = true;
         document.getElementById('adminLoginBtn').style.display = 'none';
         document.getElementById('adminLogoutBtn').style.display = 'block';
