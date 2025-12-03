@@ -223,6 +223,23 @@ let weaponsData = {
                 velocity: "850 m/s",
                 rpm: "715"
             }
+        },
+        {
+            id: "10",
+            name: "ASh-12",
+            manufacturer: "Izhmash",
+            manufacturerLogo: "assets/izhmash-logo.png",
+            manufacturerUrl: "",
+            image: "assets/ash12.png",
+            description: "ASh-12.7 (Avtomat Shturmovoy 12 - \"Assault Automatic Rifle 12\") 불펍 돌격소총은 CQB 및 시가전을 위해 개발된 소총으로, 러시아 연방보안국의 요청으로 Tula의 KBP 디자인 관리국의 자회사인 TsKIB SOO (총기 디자인 및 연구 중앙 관리국)에서 설계하고 이즈마쉬(Izhmash)에서 생산되었습니다. FSB 요원들이 시가전에서 수월하게 교전할 수 있도록 대인 저지력을 극대화했습니다.",
+            stats: {
+                recoil: "100",
+                sway: "166",
+                ergonomics: "65",
+                accuracy: "1.63 MOA",
+                velocity: "327 m/s",
+                rpm: "650"
+            }
         }
     ],
     "기관단총": [
