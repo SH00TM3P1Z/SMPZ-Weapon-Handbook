@@ -11,12 +11,12 @@ let weaponsData = {
             image: "assets/m16a1.png",
             description: "1960년대 후반에 Colt가 개발한 5.56x45mm 돌격 소총이자 AR-15/M16의 개량형입니다. M16A1은 베트남 전쟁 중 미군의 표준 제식 소총이 되었고, 신뢰성 향상을 위한 개량이 이루어졌습니다. 현대의 기준으로는 구식이지만, 수집가나 사격 애호가에게 높이 평가되고 있습니다. 또한 대한민국에서는 일부 예비군 부대에서 M16A1이 아직도 운용되고 있는 것으로 알려져 있습니다.",
             stats: {
-                recoil: "",
-                sway: "",
-                ergonomics: "",
-                accuracy: "",
-                velocity: "",
-                rpm: ""
+                recoil: "120",
+                sway: "200",
+                ergonomics: "61",
+                accuracy: "1.24 MOA",
+                velocity: "x1.2",
+                rpm: "900"
             }
         },
         {
