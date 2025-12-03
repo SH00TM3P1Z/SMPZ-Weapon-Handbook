@@ -297,6 +297,49 @@ body {
     border: 1px solid #333;
 }
 
+/* 능력치 섹션 */
+.weapon-stats-container {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 20px 20px 20px;
+    background: #111111;
+    border-radius: 10px;
+    border: 1px solid #333;
+}
+
+.weapon-stats-title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.weapon-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.weapon-stat-row {
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.weapon-stat-label {
+    width: 70px;
+    text-align: right;
+    opacity: 0.85;
+}
+
+.weapon-stat-value {
+    flex: 1;
+    text-align: left;
+}
+
 .weapon-detail-actions {
     margin-top: 30px;
     display: flex;

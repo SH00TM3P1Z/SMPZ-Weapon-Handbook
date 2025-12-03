@@ -9,7 +9,15 @@ let weaponsData = {
             manufacturerLogo: "assets/colt-logo.png",
             manufacturerUrl: "https://www.colt.com/",
             image: "assets/m16a1.png",
-            description: "1960년대 후반에 Colt가 개발한 5.56x45mm 돌격 소총이자 AR-15/M16의 개량형입니다. M16A1은 베트남 전쟁 중 미군의 표준 제식 소총이 되었고, 신뢰성 향상을 위한 개량이 이루어졌습니다. 현대의 기준으로는 구식이지만, 수집가나 사격 애호가에게 높이 평가되고 있습니다. 또한 대한민국에서는 일부 예비군 부대에서 M16A1이 아직도 운용되고 있는 것으로 알려져 있습니다."
+            description: "1960년대 후반에 Colt가 개발한 5.56x45mm 돌격 소총이자 AR-15/M16의 개량형입니다. M16A1은 베트남 전쟁 중 미군의 표준 제식 소총이 되었고, 신뢰성 향상을 위한 개량이 이루어졌습니다. 현대의 기준으로는 구식이지만, 수집가나 사격 애호가에게 높이 평가되고 있습니다. 또한 대한민국에서는 일부 예비군 부대에서 M16A1이 아직도 운용되고 있는 것으로 알려져 있습니다.",
+            stats: {
+                recoil: "",
+                sway: "",
+                ergonomics: "",
+                accuracy: "",
+                velocity: "",
+                rpm: ""
+            }
         },
         {
             id: "2",
@@ -391,6 +399,50 @@ function showWeaponDetail(weapon, categoryKey) {
         descContainer.className = 'weapon-detail-description-container';
         descContainer.innerHTML = '<div class="weapon-description-placeholder">해당 총기의 설명</div>';
         detailCard.appendChild(descContainer);
+    }
+
+    // 능력치 섹션
+    if (weapon.stats) {
+        const statsContainer = document.createElement('div');
+        statsContainer.className = 'weapon-stats-container';
+
+        const statsTitle = document.createElement('div');
+        statsTitle.className = 'weapon-stats-title';
+        statsTitle.textContent = '- 능력치 -';
+        statsContainer.appendChild(statsTitle);
+
+        const statsList = document.createElement('div');
+        statsList.className = 'weapon-stats-list';
+
+        const statsDefs = [
+            { key: 'recoil', label: '반동' },
+            { key: 'sway', label: '흔들림' },
+            { key: 'ergonomics', label: '인체공학' },
+            { key: 'accuracy', label: '명중률' },
+            { key: 'velocity', label: '탄속' },
+            { key: 'rpm', label: 'RPM' }
+        ];
+
+        statsDefs.forEach(stat => {
+            const row = document.createElement('div');
+            row.className = 'weapon-stat-row';
+
+            const label = document.createElement('span');
+            label.className = 'weapon-stat-label';
+            label.textContent = `${stat.label}:`;
+
+            const value = document.createElement('span');
+            value.className = 'weapon-stat-value';
+            const v = weapon.stats[stat.key];
+            value.textContent = v !== undefined && v !== null && v !== "" ? v : '-';
+
+            row.appendChild(label);
+            row.appendChild(value);
+            statsList.appendChild(row);
+        });
+
+        statsContainer.appendChild(statsList);
+        detailCard.appendChild(statsContainer);
     }
     
     // 관리자 모드일 경우 편집/삭제 버튼 표시
