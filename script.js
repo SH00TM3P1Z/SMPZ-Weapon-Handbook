@@ -259,6 +259,23 @@ let weaponsData = {
                 velocity: "607 m/s",
                 rpm: "923"
             }
+        },
+        {
+            id: "3",
+            name: "HK MP7A1",
+            manufacturer: "Heckler & Koch",
+            manufacturerLogo: "assets/hk-logo.png",
+            manufacturerUrl: "https://www.heckler-koch.com/en",
+            image: "assets/mp7a1.png",
+            description: "헤클러 앤 코흐에서 제작한 HK MP7 기관단총은 매우 작고 가벼우며, 매우 좁은 공간에서 사용할 수 있으며, 실제로 반동이 거의 없습니다. 지속적으로 운반할 수 있다는 점이 오늘날의 군인에게 이상적인 개인화기가 되게 해주었습니다. MP7은 소지하고 있는 사람이 투입된 작전에 맞게 광범위하게 개조할 수 있습니다.",
+            stats: {
+                recoil: "65",
+                sway: "50",
+                ergonomics: "78",
+                accuracy: "8.34 MOA",
+                velocity: "651 m/s",
+                rpm: "949"
+            }
         }
     ],
     "저격 소총": [
@@ -311,6 +328,23 @@ let weaponsData = {
                 accuracy: "0.46 MOA",
                 velocity: "1100 m/s",
                 rpm: "60"
+            }
+        },
+        {
+            id: "4",
+            name: "Knight's Armament Company SR-25",
+            manufacturer: "Knight's Armament Company",
+            manufacturerLogo: "assets/kac-logo.png",
+            manufacturerUrl: "https://www.knightarmco.com/",
+            image: "assets/sr25.png",
+            description: "SR-25 정밀 소총은 유진 스토너가 설계하고 나이츠 아머먼트 컴퍼니에서 제작한 7.62mm NATO 반자동 정밀 소총의 최신 발전형입니다. 양손잡이용 노리쇠 멈치, 조정간, 탄창 분리 장치를 갖추고 있어 왼손잡이 사용자도 AR-15 기반 조작계의 인체공학적 이점을 그대로 활용할 수 있으며, 오른손잡이 사용자에게는 조작 효율을 높일 수 있는 추가적인 조작 방법을 제공합니다. 드롭-인 2단 방아쇠는 장거리 정밀 사격에 도움을 주며, E2 노리쇠와 가스 시스템은 소음기 장착 여부와 관계없이 우수한 신뢰성을 제공합니다.",
+            stats: {
+                recoil: "132",
+                sway: "102",
+                ergonomics: "50",
+                accuracy: "1.55 MOA",
+                velocity: "939 m/s",
+                rpm: "700"
             }
         }
     ],
