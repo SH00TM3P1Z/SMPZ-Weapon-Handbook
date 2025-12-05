@@ -373,6 +373,23 @@ let weaponsData = {
                 velocity: "939 m/s",
                 rpm: "700"
             }
+        },
+        {
+            id: "5",
+            name: "Remington R11 RSASS",
+            manufacturer: "Remington",
+            manufacturerLogo: "assets/remington-logo.png",
+            manufacturerUrl: "https://www.remarms.com/",
+            image: "assets/rsass.png",
+            description: "레밍턴 반자동 저격 시스템은 레밍턴 암즈와 JP 엔터프라이즈가 공동으로 개발한, 매우 정확하고 탁월한 완성도를 가진 고속 발사 저격소총의 결정체입니다. 이 무기는 반자동 플랫폼이 주는 전술적 이점을 유지하면서, 800미터 이상에서도 서브 MOA급의 정확도를 제공합니다.",
+            stats: {
+                recoil: "130",
+                sway: "120",
+                ergonomics: "49",
+                accuracy: "0.77 MOA",
+                velocity: "943 m/s",
+                rpm: "700"
+            }
         }
     ],
     "산탄총": [],
@@ -895,13 +912,14 @@ function showWeaponDetail(weapon, categoryKey) {
                     let worse = false;
 
                     // 반동, 흔들림, 명중률(MOA)은 값이 낮을수록 좋음
+                    // 실제 숫자 값을 비교해야 함 (percent는 invert 적용되어 있어서 잘못된 비교가 됨)
                     if (stat.key === 'recoil' || stat.key === 'sway' || stat.isMoa) {
-                        better = percentCompare < percent;
-                        worse = percentCompare > percent;
+                        better = numericCompare < numericValue;  // 비교값이 기준값보다 낮으면 좋음
+                        worse = numericCompare > numericValue;   // 비교값이 기준값보다 높으면 나쁨
                     } else {
                         // 나머지(인체공학, 탄속, RPM)는 값이 높을수록 좋음
-                        better = percentCompare > percent;
-                        worse = percentCompare < percent;
+                        better = numericCompare > numericValue;  // 비교값이 기준값보다 높으면 좋음
+                        worse = numericCompare < numericValue;   // 비교값이 기준값보다 낮으면 나쁨
                     }
 
                     if (better) {
