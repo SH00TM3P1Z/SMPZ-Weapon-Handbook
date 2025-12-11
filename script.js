@@ -253,6 +253,23 @@ let weaponsData = {
         },
         {
             id: "11",
+            name: "CMMG Mk47 Mutant",
+            manufacturer: "CMMG",
+            manufacturerLogo: "assets/cmmg-logo.png",
+            manufacturerUrl: "https://cmmg.com/",
+            image: "assets/mk47.png",
+            description: "CMMG Mk47 Mutant는 미국의 CMMG Inc.에서 제작한 7.62x39mm 구경의 카빈으로, 강철·폴리머·드럼 타입을 포함한 모든 종류의 AK 탄창과 호환이 가능한 특징을 가지고 있습니다. 이 카빈은 뛰어난 신뢰성을 입증했으며, AR 시스템 특유의 클래식한 조작성과 결합되어 우수한 성능을 보여주는 대표적인 총기로 평가되고 있습니다. 이 변형 모델은 완전자동 사격 모드를 갖추고 있으며, 법 집행기관 및 군용으로만 사용이 허가됩니다.",
+            stats: {
+                recoil: "150",
+                sway: "125",
+                ergonomics: "59",
+                accuracy: "2.48 MOA",
+                velocity: "697 m/s",
+                rpm: "650"
+            }
+        },
+        {
+            id: "12",
             name: "Kalashnikov AK-74",
             manufacturer: "Izhmash",
             manufacturerLogo: "assets/kalashnikov-logo.png",
@@ -269,7 +286,7 @@ let weaponsData = {
             }
         },
         {
-            id: "12",
+            id: "13",
             name: "Kalashnikov AKM",
             manufacturer: "Izhmash",
             manufacturerLogo: "assets/kalashnikov-logo.png",
@@ -284,7 +301,7 @@ let weaponsData = {
                 velocity: "775 m/s",
                 rpm: "612"
             }
-        }
+        },
     ],
     "기관단총": [
         {
