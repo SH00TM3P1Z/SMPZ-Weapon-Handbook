@@ -250,6 +250,40 @@ let weaponsData = {
                 velocity: "327 m/s",
                 rpm: "650"
             }
+        },
+        {
+            id: "11",
+            name: "Kalashnikov AK-74",
+            manufacturer: "Izhmash",
+            manufacturerLogo: "assets/kalashnikov-logo.png",
+            manufacturerUrl: "https://en.kalashnikovgroup.ru/",
+            image: "assets/ak74.png",
+            description: "AK-74(Avtomat Kalashnikova 74 – ‘칼라시니코프 자동소총 74’) 5.45x39mm 돌격 소총은 군에서 새로운 5.45x39 탄약을 채용함에 따라, 1970년 미하일 칼라시니코프에 의해 AKM을 더욱 발전시킨 형태로 개발되었습니다. AK-74는 새로운 개머리판과 핸드가드(기존 AKM과 동일한 손가락 굴곡부 유지), 그리고 가스 실린더가 적용되었습니다. 개머리판은 AKM과는 다른 형태의 어깨받침을 사용하며, 고무 재질에 톱니 형태의 표면 처리가 되어 사수가 어깨에 더 안정적으로 고정할 수 있게 설계했습니다. 또한 개머리판 양측에는 경량화를 위한 컷이 존재합니다. 초기에는 개머리판, 하부 핸드가드, 상부 히트가드가 적층 목재로 제작되었으나, 이후 자주빛 또는 짙은 갈색의 합성 섬유(유리섬유) 재질로 변경되었습니다.",
+            stats: {
+                recoil: "113",
+                sway: "110",
+                ergonomics: "49",
+                accuracy: "1.99 MOA",
+                velocity: "880 m/s",
+                rpm: "612"
+            }
+        },
+        {
+            id: "12",
+            name: "Kalashnikov AKM",
+            manufacturer: "Izhmash",
+            manufacturerLogo: "assets/kalashnikov-logo.png",
+            manufacturerUrl: "https://en.kalashnikovgroup.ru/",
+            image: "assets/akm.png",
+            description: "AKM(Avtomát Kaláshnikova Modernizírovanny – ‘현대화된 칼라시니코프 자동소총’) 7.62x39mm 자동 소총은 1959년 소련군의 표준 제식 소총으로 AK를 대체하기 위해 채용되었습니다. AK와 비교했을 때 주요 차이점은 향상된 명중 사거리, 더 가벼운 중량, 새로 설계된 개머리판과 방아쇠 구조, 해머 지연장치, 보정기(Muzzle Compensator), 그리고 소총의 효율을 개선하기 위한 기타 설계 변경점들입니다.",
+            stats: {
+                recoil: "129",
+                sway: "115",
+                ergonomics: "47",
+                accuracy: "2.3 MOA",
+                velocity: "775 m/s",
+                rpm: "612"
+            }
         }
     ],
     "기관단총": [
