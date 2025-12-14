@@ -72,6 +72,23 @@ let weaponsData = {
                 velocity: "440 m/s",
                 rpm: "375"
             }
+        },
+        {
+            id: "5",
+            name: "HK USP",
+            manufacturer: "Heckler & Koch",
+            manufacturerLogo: "assets/hk-logo.png",
+            manufacturerUrl: "https://www.heckler-koch.com/en",
+            image: "assets/usp.png",
+            description: "헤클러 앤 코흐에서 제작한 HK USP(Universelle Selbstladepistole, ‘범용 자동 장전 권총’)는 HK P7 시리즈 권총을 대체하기 위해 개발된 후속 모델입니다. 정확성과 뛰어난 신뢰성을 갖춘 권총으로 국제적으로 높은 평가를 받고 있습니다. 개량형 브라우닝식 작동 구조와 특허받은 반동 감소 시스템을 채택해, 권총 부품에 가해지는 반동 부담을 줄이는 동시에 사수가 느끼는 반동도 효과적으로 낮췄습니다.",
+            stats: {
+                recoil: "100",
+                sway: "90",
+                ergonomics: "89",
+                accuracy: "9.63 MOA",
+                velocity: "260 m/s",
+                rpm: "480"
+            }
         }
     ],
     "돌격 소총": [
@@ -302,6 +319,23 @@ let weaponsData = {
                 rpm: "612"
             }
         },
+        {
+            id: "14",
+            name: "Kalashnikov AKMN",
+            manufacturer: "Izhmash",
+            manufacturerLogo: "assets/kalashnikov-logo.png",
+            manufacturerUrl: "https://en.kalashnikovgroup.ru/",
+            image: "assets/akmn.png",
+            description: "AKMN(Avtomat Kalashnikova Modernizirovanny Nochnoy – ‘야간용으로 현대화된 칼라시니코프 자동소총’)은 NSP 계열의 야간 투시 장비(NSP-2, NSP-3, NSP-3A, NSPU, NSPU-M)를 장착할 수 있도록 도브테일 마운트가 추가된 개량형 AKM 자동 소총입니다.",
+            stats: {
+                recoil: "120",
+                sway: "115",
+                ergonomics: "47",
+                accuracy: "2.3 MOA",
+                velocity: "775 m/s",
+                rpm: "612"
+            }
+        }
     ],
     "기관단총": [
         {
@@ -441,9 +475,112 @@ let weaponsData = {
                 velocity: "943 m/s",
                 rpm: "700"
             }
+        },
+        {
+            id: "6",
+            name: "The AK Guy AK-50",
+            manufacturer: "Brandon Herrera",
+            manufacturerLogo: "assets/akguy-logo.png",
+            manufacturerUrl: "https://www.theakguy.com/",
+            image: "assets/ak50.png",
+            description: "AK-50 반자동 대물 저격 소총은 칼라시니코프 플랫폼에 .50 BMG 탄약을 사용하도록 개조한 최초의 실험 프로젝트입니다. AK-50은 뛰어난 관통력과 사거리를 가지고 있어, 매우 강력한 저격 소총입니다. 이 프로토타입은 총기 제조업체이자 유튜브 블로거인 브랜든 헤레라와 The AK Guy LTD의 일원으로 개발되었습니다.",
+            stats: {
+                recoil: "200",
+                sway: "120",
+                ergonomics: "40",
+                accuracy: "0.31 MOA",
+                velocity: "1091 m/s",
+                rpm: "500"
+            }
+        },
+        {
+            id: "7",
+            name: "Tokarev SVT-40",
+            manufacturer: "",
+            manufacturerLogo: "",
+            manufacturerUrl: "",
+            image: "assets/svt.png",
+            description: "표도르 바실리예비치 토카레프가 개발한 SVT-40은 기관단총의 대량 생산이 시작되기 전 제2차 세계대전 초기 유일하게 대량 생산된 개인 화기였습니다. 병사들은 이 소총을 애정을 담아 '스베타(Sveta)'라고 불렀습니다. '스베타'가 부대에 배치되자, 모든 붉은 군대 병사들이 이 무기를 진정으로 숙달할 수 있는 것은 아니라는 것이 드러났습니다. SVT는 해병 보병 부대와 저격수들이 가장 잘 활용했습니다. SVT-40의 생산은 전쟁이 끝날 때까지 계속되었으며, 이 반자동 소총은 전체 승리에 중요한 기여를 했습니다.",
+            stats: {
+                recoil: "102",
+                sway: "102",
+                ergonomics: "61",
+                accuracy: "1.37 MOA",
+                velocity: "965 m/s",
+                rpm: "750"
+            }
+        },
+        {
+            id: "8",
+            name: "Tokarev AVT-40",
+            manufacturer: "",
+            manufacturerLogo: "",
+            manufacturerUrl: "",
+            image: "assets/svt.png",
+            description: "AVT-40은 제2차 세계대전 초기 권총과 기관단총의 부족을 부분적으로 보완했습니다. AVT-40은 설계 면에서 SVT-40과 유사하지만, 안전 장치 레버가 발사 모드 선택기의 역할을 수행하기 때문에 단발 사격과 연발 사격 모두 가능합니다.",
+            stats: {
+                recoil: "102",
+                sway: "102",
+                ergonomics: "61",
+                accuracy: "1.37 MOA",
+                velocity: "965 m/s",
+                rpm: "750"
+            }
         }
     ],
-    "산탄총": [],
+    "산탄총": [
+        {
+            id: "1",
+            name: "AA-12 Gen 1",
+            manufacturer: "",
+            manufacturerLogo: "assets/mf-logo.png",
+            manufacturerUrl: "https://www.militaryfactory.com/smallarms/manufacturer.php?thisCompany=Military%20Police%20Systems",
+            image: "assets/aa12.png",
+            description: "AA-12 (Auto Assault-12)는 높은 신뢰성을 지닌 전자동 12게이지 산탄총입니다. 1세대 모델은 상단에 높게 부착된 일체형 기계식 조준기가 특징입니다. 이 산탄총은 반동 펄스를 누적시키는 독특한 구조로, 연사 속도와 저지력을 유지하면서도 부드러운 반동을 제공합니다. AA-12는 군과 경찰 부대를 위해 설계되었으며, Military Police Systems에서 제조되었습니다.",
+            stats: {
+                recoil: "95",
+                sway: "100",
+                ergonomics: "51",
+                accuracy: "22.35 MOA",
+                velocity: "436 m/s",
+                rpm: "330"
+            }
+        },
+        {
+            id: "2",
+            name: "AA-12 Gen 2",
+            manufacturer: "",
+            manufacturerLogo: "assets/mf-logo.png",
+            manufacturerUrl: "https://www.militaryfactory.com/smallarms/manufacturer.php?thisCompany=Military%20Police%20Systems",
+            image: "assets/aa12gen2.png",
+            description: "AA-12 (Auto Assault-12)는 높은 신뢰성을 지닌 전자동 12게이지 산탄총입니다. 2세대 모델은 조준경을 부착할 수 있는 일체형 마운트가 특징입니다. 이 산탄총은 반동 펄스를 누적시키는 독특한 구조로, 연사 속도와 저지력을 유지하면서도 부드러운 반동을 제공합니다. AA-12는 군과 경찰 부대를 위해 설계되었으며, Military Police Systems에서 제조되었습니다.",
+            stats: {
+                recoil: "95",
+                sway: "100",
+                ergonomics: "51",
+                accuracy: "22.35 MOA",
+                velocity: "436 m/s",
+                rpm: "330"
+            }
+        },
+        {
+            id: "3",
+            name: "IzhMekh MP-43",
+            manufacturer: "",
+            manufacturerLogo: "assets/kalashnikov-logo.png",
+            manufacturerUrl: "https://en.kalashnikovgroup.ru/",
+            image: "assets/mp43.png",
+            description: "이즈메흐에서 제작한 심플하고 우아한 클래식 더블-배럴 12게이지 샷건입니다.\n<em>\"더블배럴 샷건이야말로 훌륭한 대화 수단이지.\"</em>",
+            stats: {
+                recoil: "100",
+                sway: "175",
+                ergonomics: "51",
+                accuracy: "13.06 MOA",
+                velocity: "425 m/s",
+                rpm: "기록되지않음"
+            }
+        }
+    ],
     "경기관총": [
         {
             id: "1",
@@ -709,7 +846,7 @@ function showWeaponDetail(weapon, categoryKey) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
         // 특정 로고는 필터 제거 (원본 색상 유지)
-        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo'];
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo', 'mf-logo'];
         if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
@@ -818,7 +955,7 @@ function showWeaponDetail(weapon, categoryKey) {
         
         const desc = document.createElement('div');
         desc.className = 'weapon-detail-description';
-        desc.textContent = weapon.description;
+        desc.innerHTML = weapon.description;
         descContainer.appendChild(desc);
         
         detailCard.appendChild(descContainer);
