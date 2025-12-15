@@ -335,6 +335,74 @@ let weaponsData = {
                 velocity: "775 m/s",
                 rpm: "612"
             }
+        },
+        {
+            id: "15",
+            name: "AS VAL",
+            manufacturer: "TsNIITochMash",
+            manufacturerLogo: "assets/TsNIITochMash-logo.png",
+            manufacturerUrl: "",
+            image: "assets/asval.png",
+            description: "AS VAL(Avtomat Specialniy VAL - \"특수 자동 소총 VAL\")은 TsNIITochMash(츠니토치마쉬)에서 특수부대를 위해 VSS 빈토레즈 플랫폼을 기반으로 설계 및 제작된 일체형 소음기를 갖춘 소음 자동 소총입니다.",
+            stats: {
+                recoil: "80",
+                sway: "110",
+                ergonomics: "58",
+                accuracy: "3.44 MOA",
+                velocity: "280 m/s",
+                rpm: "900"
+            }
+        },
+        {
+            id: "16",
+            name: "VSS Vintorez",
+            manufacturer: "TsNIITochMash",
+            manufacturerLogo: "assets/TsNIITochMash-logo.png",
+            manufacturerUrl: "",
+            image: "assets/vss.png",
+            description: "VSS (Vintovka Sniperskaya Specialnaya - \"특수 저격 소총\")는 일체형 소음기 특수 저격 소총이며, 1980년대에 특수 목적 팀과 태스크 포스를 위해 TsNIITochMash(츠니토치마쉬)에서 설계 및 제작되었습니다.",
+            stats: {
+                recoil: "75",
+                sway: "101",
+                ergonomics: "61",
+                accuracy: "3.44 MOA",
+                velocity: "280 m/s",
+                rpm: "900"
+            }
+        },
+        {
+            id: "17",
+            name: "SR-3M",
+            manufacturer: "TsNIITochMash",
+            manufacturerLogo: "assets/TsNIITochMash-logo.png",
+            manufacturerUrl: "",
+            image: "assets/sr3m.png",
+            description: "SR-3M은 TsNIITochMash(츠니토치마쉬)에서 AS VAL 돌격 소총을 기반으로 개발된 강력한 돌격소총으로, 기관단총과 비슷할 정도로 매우 컴팩트한 크기를 갖고 있지만, 특수 철갑 탄약을 사용하기 때문에 화력 면에서는 확연히 더 뛰어난 특징이 있습니다. 또한 SR-3M은 러시아 특수부대가 은닉 휴대용 무기 사용 목적으로 사용됩니다.",
+            stats: {
+                recoil: "70",
+                sway: "108",
+                ergonomics: "68",
+                accuracy: "5.02 MOA",
+                velocity: "280 m/s",
+                rpm: "923"
+            }
+        },
+        {
+            id: "18",
+            name: "DS Arms SA58",
+            manufacturer: "DS Arms",
+            manufacturerLogo: "assets/dsarms-logo.png",
+            manufacturerUrl: "https://dsarms.com/",
+            image: "assets/sa58.png",
+            description: "SA58 OSW(Operations Specialist Weapon)는 미국 회사 DSA(또는 DS Arms, David Selvaggio Arms)가 제조한 소총으로, FAL의 합법적인 복제 모델입니다. 이 소총은 StG-58에 사용된 것과 동일한 Steyr-Daimler-Puch 생산 라인의 장비로 제작되었습니다. 총열 길이는 여러 가지로 제공될 수 있으며, 알루미늄 합금 하부 리시버와 유리섬유 강화 나일론 재질의 개량된 가구류를 갖추고 있습니다. 민수용 모델은 반자동 전용이지만, 군과 법 집행 기관용으로는 분당 750발의 완전 자동 연사 속도를 지닌 선택 사격 모델도 조달할 수 있습니다. DSA58은 모든 미터 규격의 FAL 탄창을 사용할 수 있습니다.",
+            stats: {
+                recoil: "182",
+                sway: "150",
+                ergonomics: "55",
+                accuracy: "2.61 MOA",
+                velocity: "839 m/s",
+                rpm: "750"
+            }
         }
     ],
     "기관단총": [
@@ -387,6 +455,23 @@ let weaponsData = {
                 accuracy: "8.34 MOA",
                 velocity: "651 m/s",
                 rpm: "949"
+            }
+        },
+        {
+            id: "4",
+            name: "PPSh-41",
+            manufacturer: "",
+            manufacturerLogo: "",
+            manufacturerUrl: "",
+            image: "assets/ppsh41.png",
+            description: "PPSh-41(Pistolet-Pulemyot Shpagina, \"슈파긴의 기관단총\")은 소련의 기관단총으로, 게오르기 슈파긴이 PPD-40의 값비싸고 복잡한 구조를 대체하기 위해 저렴하고 신뢰성이 높으며 단순화된 설계로 개발한 무기입니다.",
+            stats: {
+                recoil: "52",
+                sway: "50",
+                ergonomics: "70",
+                accuracy: "7.22 MOA",
+                velocity: "454 m/s",
+                rpm: "1000"
             }
         }
     ],
@@ -483,7 +568,7 @@ let weaponsData = {
             manufacturerLogo: "assets/akguy-logo.png",
             manufacturerUrl: "https://www.theakguy.com/",
             image: "assets/ak50.png",
-            description: "AK-50 반자동 대물 저격 소총은 칼라시니코프 플랫폼에 .50 BMG 탄약을 사용하도록 개조한 최초의 실험 프로젝트입니다. AK-50은 뛰어난 관통력과 사거리를 가지고 있어, 매우 강력한 저격 소총입니다. 이 프로토타입은 총기 제조업체이자 유튜브 블로거인 브랜든 헤레라와 The AK Guy LTD의 일원으로 개발되었습니다.",
+            description: "AK-50 반자동 대물 저격 소총은 칼라시니코프 플랫폼에 .50 BMG 탄약을 사용하도록 개조한 최초의 실험적 프로젝트입니다. AK-50은 뛰어난 관통력과 사거리를 가지고 있어, 매우 강력한 저격 소총입니다. 이 프로토타입은 총기 제조업체이자 유튜브 블로거인 브랜든 헤레라와 The AK Guy LTD의 일원으로 개발되었습니다.",
             stats: {
                 recoil: "200",
                 sway: "120",
@@ -846,7 +931,7 @@ function showWeaponDetail(weapon, categoryKey) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
         // 특정 로고는 필터 제거 (원본 색상 유지)
-        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo', 'mf-logo'];
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo', 'mf-logo', 'dsarms-logo'];
         if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
