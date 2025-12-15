@@ -343,7 +343,7 @@ let weaponsData = {
             manufacturerLogo: "assets/TsNIITochMash-logo.png",
             manufacturerUrl: "",
             image: "assets/asval.png",
-            description: "AS VAL(Avtomat Specialniy VAL - \"특수 자동 소총 VAL\")은 TsNIITochMash(츠니토치마쉬)에서 특수부대를 위해 VSS 빈토레즈 플랫폼을 기반으로 설계 및 제작된 일체형 소음기를 갖춘 소음 자동 소총입니다.",
+            description: "AS VAL(Avtomat Specialniy VAL - \"특수 자동 소총 VAL\")은 TsNIITochMash(츠니토치마쉬)에서 특수부대를 위해 VSS 빈토레즈 플랫폼을 기반으로 설계 및 제작된 일체형 소음기를 갖춘 자동 소총입니다.",
             stats: {
                 recoil: "80",
                 sway: "110",
