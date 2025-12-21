@@ -377,7 +377,7 @@ let weaponsData = {
             manufacturerLogo: "assets/TsNIITochMash-logo.png",
             manufacturerUrl: "",
             image: "assets/sr3m.png",
-            description: "SR-3M은 TsNIITochMash(츠니토치마쉬)에서 AS VAL 돌격 소총을 기반으로 개발된 강력한 돌격소총으로, 기관단총과 비슷할 정도로 매우 컴팩트한 크기를 갖고 있지만, 특수 철갑 탄약을 사용하기 때문에 화력 면에서는 확연히 더 뛰어난 특징이 있습니다. 또한 SR-3M은 러시아 특수부대가 은닉 휴대용 무기 사용 목적으로 사용됩니다.",
+            description: "SR-3M은 TsNIITochMash(츠니토치마쉬)에서 AS VAL 돌격 소총을 기반으로 개발된 강력한 돌격소총으로, 기관단총과 비슷할 정도로 매우 컴팩트한 크기를 갖고 있지만, 특수 철갑 탄약을 사용하기 때문에 화력 면에서는 확연히 더 뛰어난 특징이 있습니다. 또한 SR-3M은 러시아 특수부대가 은닉 휴대용 무기 사용 목적으로 사용하고 있습니다.",
             stats: {
                 recoil: "70",
                 sway: "108",
