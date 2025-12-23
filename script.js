@@ -611,6 +611,40 @@ let weaponsData = {
                 velocity: "965 m/s",
                 rpm: "750"
             }
+        },
+        {
+            id: "9",
+            name: "Barrett M107A1",
+            manufacturer: "Barrett Firearms",
+            manufacturerLogo: "assets/barrett-logo.png",
+            manufacturerUrl: "https://barrett.net/",
+            image: "",
+            description: "Barrett Firearms에서 제작한 M107A1은 .50 BMG탄을 사용하는 반자동 대물 저격 소총입니다. M82 계열의 최신 개량형으로, 미군 제식\n장거리 저격소총(LRSR)으로 채택되어 운용 중입니다. 이 라이플은 기존 M107보다 약 1.8kg 더 가벼워졌으며, 특히 소음기 장착에 최적화된 설계가 특징입니다. 총구에는 소음기를 즉시 장착할 수 있는 원통형 총구 제퇴기(Muzzle Brake)가 부착되어 있습니다. 알루미늄 상부 리시버와 티타늄 부품을 사용하여 내식성을 높이고 무게를 줄였으며, 기본적으로 10발들이 탄창을 사용합니다. M107A1의 유효 사거리는 약 1,829m에 달하며, 그 존재 자체만으로도 전장에서 강력한 심리적 영향을 미칩니다.",
+            stats: {
+                recoil: "?",
+                sway: "?",
+                ergonomics: "?",
+                accuracy: "?",
+                velocity: "?",
+                rpm: "?"
+            }
+        },
+        {
+            id: "10",
+            name: "CheyTac M200-Intervention",
+            manufacturer: "CheyTac",
+            manufacturerLogo: "assets/cheytac-logo.png",
+            manufacturerUrl: "https://cheytac.com/",
+            image: "",
+            description: "CheyTac Firearms에서 제작한 M200 Intervention은 .408 CheyTac 또는 .375 CheyTac 탄을 사용하는 볼트액션 저격 소총입니다.\n이 라이플은 EDM Arms Windrunner를 기반으로 개발되었으며, 2000m 이상의 초장거리 사격에서 탁월한 아음속(Sub-MOA) 명중률을\n보장하도록 설계되었습니다. 이 총기는 특히 세계 최고 수준의 장거리 정밀도로 명성이 높습니다. 총열 교체 및 총기 분해가 용이한 설계가 특징이며, 휴대용 탄도 계산기 및 기상 측정기와 함께 사용하는 시스템으로 완성되었습니다. 무게를 줄이고 내식성을 높이기 위해 고품질\n소재와 세라코트 마감 등이 적용되었으며, 실용성을 희생하고 오직 초장거리 명중률이라는 단 하나의 목표에만 매달린 집념의 총기입니다.",
+            stats: {
+                recoil: "?",
+                sway: "?",
+                ergonomics: "?",
+                accuracy: "?",
+                velocity: "?",
+                rpm: "?"
+            }
         }
     ],
     "산탄총": [
@@ -931,7 +965,7 @@ function showWeaponDetail(weapon, categoryKey) {
         const logoImg = document.createElement('img');
         logoImg.className = 'weapon-manufacturer-logo';
         // 특정 로고는 필터 제거 (원본 색상 유지)
-        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo', 'mf-logo', 'dsarms-logo'];
+        const logosWithoutFilter = ['ai-logo', 'TsNIITochMash-logo', 'hk-logo', 'radian-logo', 'milkor-logo', 'kalashnikov-logo', 'mf-logo', 'dsarms-logo', 'barrett-logo', 'cheytac-logo'];
         if (logosWithoutFilter.some(logo => weapon.manufacturerLogo.includes(logo))) {
             logoImg.classList.add('logo-no-filter');
         }
@@ -1017,7 +1051,7 @@ function showWeaponDetail(weapon, categoryKey) {
         img.onerror = function() {
             // 이미지 로드 실패 시 플레이스홀더 표시
             this.style.display = 'none';
-            imageContainer.innerHTML = '<div class="weapon-image-placeholder">해당 총기 사진</div>';
+            imageContainer.innerHTML = '<div class="weapon-image-placeholder">-</div>';
         };
         img.onclick = function() {
             openImageModal(weapon.image, weapon.name);
@@ -1029,7 +1063,7 @@ function showWeaponDetail(weapon, categoryKey) {
         // 이미지가 없을 경우 플레이스홀더
         const imageContainer = document.createElement('div');
         imageContainer.className = 'weapon-detail-image-container';
-        imageContainer.innerHTML = '<div class="weapon-image-placeholder">해당 총기 사진</div>';
+        imageContainer.innerHTML = '<div class="weapon-image-placeholder">-</div>';
         detailCard.appendChild(imageContainer);
     }
     
