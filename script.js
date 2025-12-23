@@ -207,7 +207,7 @@ let weaponsData = {
             manufacturerLogo: "assets/radian-logo.png",
             manufacturerUrl: "https://www.radianweapons.com/",
             image: "assets/radianmodel1.png",
-            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다.",
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 시스템의 핵심은 오른손 검지 만으로 탄창 멈치와 노리쇠 멈치를 동시에 조작할 수 있다는 점입니다. 특히 탄 걸림(기능 고장) 발생 시, 사격 자세를 유지한 채 최소한의 움직임으로 안전하게 약실을 개방할 수 있어 극한의 전술 상황에서 진가가 발휘됩니다. 또한, 완전한 양손잡이(Ambidextrous) 설계로 왼손잡이 유저도 불편함 없이 모든 조작이 가능합니다.",
             stats: {
                 recoil: "102",
                 sway: "185",
@@ -224,7 +224,7 @@ let weaponsData = {
             manufacturerLogo: "assets/radian-logo.png",
             manufacturerUrl: "https://www.radianweapons.com/",
             image: "assets/radianmodel1.png",
-            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 모델은 풀 오토 기능을 갖춘 Talon 조정간이 탑재되어 있습니다.",
+            description: "Radian Weapons에서 제작한 Radian Model 1은 5.56x45 NATO탄을 사용하는 AR-15 플랫폼 돌격 소총입니다. 이 라이플은 전문가 및 스포츠 용도를 위한 신뢰성이 높고 고품질의 정확한 시스템으로 평가됩니다. 또한 Radian의 ADAC 시스템이 채택되어 있어 노리쇠 후퇴 고정 조작을 보다 신속하고 직관적으로 수행할 수 있도록 설계되었습니다. 이 시스템의 핵심은 오른손 검지 만으로 탄창 멈치와 노리쇠 멈치를 동시에 조작할 수 있다는 점입니다. 특히 탄 걸림(기능 고장) 발생 시, 사격 자세를 유지한 채 최소한의 움직임으로 안전하게 약실을 개방할 수 있어 극한의 전술 상황에서 진가가 발휘됩니다. 또한, 완전한 양손잡이(Ambidextrous) 설계로 왼손잡이 유저도 불편함 없이 모든 조작이 가능합니다. 이 모델은 풀 오토 기능을 갖춘 Talon 조정간이 탑재되어 있습니다.",
             stats: {
                 recoil: "102",
                 sway: "185",
