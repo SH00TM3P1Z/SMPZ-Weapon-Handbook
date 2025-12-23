@@ -636,7 +636,7 @@ let weaponsData = {
             manufacturerLogo: "assets/cheytac-logo.png",
             manufacturerUrl: "https://cheytac.com/",
             image: "",
-            description: "CheyTac USA에서 제작한 M200 Intervention은 .408 CheyTac 탄을 사용하는 볼트액션 저격 소총입니다.\n이 라이플은 EDM Arms Windrunner와 유사한 설계 철학을 공유하며, 2000m 이상의 초장거리 사격에서 탁월한 아음속(Sub-MOA)\n명중률을 보장하도록 설계되었습니다. 이 총기는 특히 세계 최고 수준의 장거리 정밀도로 명성이 높습니다. 총열 교체 및 총기 분해가 용이한 설계가 특징이며, 휴대용 탄도 계산기와 기상 측정 장비와의 연계를 전제로 운용되는 시스템형 소총으로, 실용성을 희생하고 오직 초장거리 명중률이라는 단 하나의 목표에만 매달린 집념의 총기입니다.",
+            description: "CheyTac USA에서 제작한 M200 Intervention은 .408 CheyTac 탄을 사용하는 볼트액션 저격 소총입니다.\n이 라이플은 EDM Arms Windrunner와 유사한 설계 철학을 공유하며, .408 CheyTac 탄환의 우수한 탄도 특성을 바탕으로, 약 2,000m에\n달하는 초장거리에서도 탄두가 초음속을 유지하며 안정적인 정밀 사격이 가능하도록 설계되었습니다. 이 총기는 특히 세계 최고 수준의\n장거리 정밀도로 명성이 높습니다. 총열 교체 및 총기 분해가 용이한 설계가 특징이며, 휴대용 탄도 계산기와 기상 측정 장비와의 연계를\n전제로 운용되는 시스템형 소총으로, 실용성을 희생하고 오직 초장거리 명중률이라는 단 하나의 목표에만 매달린 집념의 총기입니다.",
             stats: {
                 recoil: "?",
                 sway: "?",
