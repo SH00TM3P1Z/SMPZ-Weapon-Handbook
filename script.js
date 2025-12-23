@@ -258,7 +258,7 @@ let weaponsData = {
             manufacturerLogo: "assets/izhmash-logo.png",
             manufacturerUrl: "",
             image: "assets/ash12.png",
-            description: "ASh-12.7 (Avtomat Shturmovoy 12 - \"Assault Automatic Rifle 12\") 불펍 돌격소총은 CQB 및 시가전을 위해 개발된 소총으로, 러시아 연방보안국의 요청으로 Tula의 KBP 디자인 관리국의 자회사인 TsKIB SOO (총기 디자인 및 연구 중앙 관리국)에서 설계하고 이즈마쉬(Izhmash)에서 생산되었습니다. FSB 요원들이 시가전에서 수월하게 교전할 수 있도록 대인 저지력을 극대화했습니다.",
+            description: "ASh-12.7 (Avtomat Shturmovoy 12 - \"Assault Automatic Rifle 12\") 불펍 돌격소총은 CQB 및 시가전을 위해 개발된 소총으로, 러시아 연방보안국의 요청으로 Tula의 KBP 디자인 관리국의 자회사인 TsKIB SOO (총기 디자인 및 연구 중앙 관리국)에서 설계하고 이즈마쉬(Izhmash)에서 생산되었습니다. FSB 요원들이 시가전에서 수월하게 교전할 수 있도록 대인 저지력을 극대화했습니다.\n12.7×55mm STs-130이라는 전용 대구경 탄환을 사용하여 최대 100~300m 거리에서 압도적인 저지력을 발휘합니다. 또한, 일반적인 돌격소총과 달리 가스 작동식이 아닌 쇼트 리코일(Short Recoil) 방식으로 작동하여 반동 제어에 도움을 줍니다. 안전장치와 사격 모드 선택 레버가 분리되어 있어, 사수는 원하는 사격 모드를 빠르게 선택할 수 있습니다.",
             stats: {
                 recoil: "100",
                 sway: "166",
@@ -394,7 +394,7 @@ let weaponsData = {
             manufacturerLogo: "assets/dsarms-logo.png",
             manufacturerUrl: "https://dsarms.com/",
             image: "assets/sa58.png",
-            description: "SA58 OSW(Operations Specialist Weapon)는 미국 회사 DSA(또는 DS Arms, David Selvaggio Arms)가 제조한 소총으로, FAL의 합법적인 복제 모델입니다. 이 소총은 StG-58에 사용된 것과 동일한 Steyr-Daimler-Puch 생산 라인의 장비로 제작되었습니다. 총열 길이는 여러 가지로 제공될 수 있으며, 알루미늄 합금 하부 리시버와 유리섬유 강화 나일론 재질의 개량된 가구류를 갖추고 있습니다. 민수용 모델은 반자동 전용이지만, 군과 법 집행 기관용으로는 분당 750발의 완전 자동 연사 속도를 지닌 선택 사격 모델도 조달할 수 있습니다. DSA58은 모든 미터 규격의 FAL 탄창을 사용할 수 있습니다.",
+            description: "SA58 OSW(Operations Specialist Weapon)는 미국 회사 DSA(또는 DS Arms, David Selvaggio Arms)가 제조한 소총으로, FAL의 합법적인 복제 모델입니다. 이 소총은 과거 StG-58에 사용된 것과 동일한 Steyr-Daimler-Puch 생산 설비로 제작되어 높은 신뢰성을 자랑합니다. 총열 길이는 여러 가지로 제공되며, 알루미늄 합금 하부 리시버와 유리섬유 강화 나일론 재질의 개량된 스톡과 핸드가드를 갖추고 있습니다. 민수용 모델은 반자동 전용이지만, 군과 법 집행 기관용으로는 분당 750발의 완전 자동 연사 속도를 지닌 선택 사격(Select-fire) 모델도 조달할 수 있습니다. DSA58은 모든 미터 규격의 FAL 탄창을 사용할 수 있습니다.",
             stats: {
                 recoil: "182",
                 sway: "150",
@@ -534,7 +534,7 @@ let weaponsData = {
             manufacturerLogo: "assets/kac-logo.png",
             manufacturerUrl: "https://www.knightarmco.com/",
             image: "assets/sr25.png",
-            description: "SR-25 정밀 소총은 유진 스토너가 설계하고 나이츠 아머먼트 컴퍼니에서 제작한 7.62mm NATO 반자동 정밀 소총의 최신 발전형입니다. 양손잡이용 노리쇠 멈치, 조정간, 탄창 분리 장치를 갖추고 있어 왼손잡이 사용자도 AR-15 기반 조작계의 인체공학적 이점을 그대로 활용할 수 있으며, 오른손잡이 사용자에게는 조작 효율을 높일 수 있는 추가적인 조작 방법을 제공합니다. 드롭-인 2단 방아쇠는 장거리 정밀 사격에 도움을 주며, E2 노리쇠와 가스 시스템은 소음기 장착 여부와 관계없이 우수한 신뢰성을 제공합니다.",
+            description: "SR-25 정밀 소총은 유진 스토너가 설계하고 나이츠 아머먼트 컴퍼니에서 제작한 7.62mm NATO 반자동 정밀 소총의 최신 발전형입니다. SR-25의 약 60%의 부품이 AR-15와 호환되고, 양손잡이용 노리쇠 멈치, 조정간, 탄창 분리 장치를 갖춰 왼손잡이 사용자도 AR-15 기반 조작계의 인체공학적 이점을 그대로 활용할 수 있습니다. 오른손잡이 사용자에게는 조작 효율을 높일 수 있는 추가적인 조작 방법을 제공합니다. 드롭-인 2단 방아쇠는 장거리 정밀 사격에 도움을 주며, 안정적이고 높은 명중률을 자랑합니다. E2 노리쇠와 가스 시스템은 소음기 장착 여부와 관계없이 우수한 신뢰성을 제공합니다.\n<em>\"아 아, 유진 스토너 그는 신이야...\"</em>",
             stats: {
                 recoil: "132",
                 sway: "102",
@@ -655,7 +655,7 @@ let weaponsData = {
             manufacturerLogo: "assets/kalashnikov-logo.png",
             manufacturerUrl: "https://en.kalashnikovgroup.ru/",
             image: "assets/mp43.png",
-            description: "이즈메흐에서 제작한 심플하고 우아한 클래식 더블-배럴 12게이지 샷건입니다.\n<em>\"더블배럴 샷건이야말로 훌륭한 대화 수단이지.\"</em>",
+            description: "이즈메흐에서 제작한 심플하고 우아한 클래식 더블-배럴 12게이지 샷건입니다. 모델에 따라 두 개의 방아쇠가 각각의 총열에 대응하는 방식과, 하나의 방아쇠로 발사 순서를 선택하는 단일 선택식 방아쇠 방식이 있습니다. 총열 내부는 부식 방지를 위해 크롬 도금 처리되어 내구성이 뛰어납니다.\n<em>\"더블배럴 샷건이야말로 훌륭한 대화 수단이지.\"</em>",
             stats: {
                 recoil: "100",
                 sway: "175",
@@ -693,7 +693,7 @@ let weaponsData = {
             manufacturerLogo: "assets/milkor-logo.png",
             manufacturerUrl: "https://www.milkorusa.com/",
             image: "assets/m32.png",
-            description: "M32A1 MSGL은 Milkor USA에서 제조한 40mm 6연발 유탄 발사기입니다. M32의 실린더는 리볼버 방식의 검증된 구조를 사용해, 빠른 조준 사격과 높은 명중률을 동시에 구현합니다.",
+            description: "M32A1 MSGL은 Milkor USA에서 제조한 40mm 6연발 유탄 발사기입니다. 이 총기는 가스 작동식 반자동 회전 실린더 방식을 사용하여, 노리쇠 멈치 없이도 방아쇠를 당기는 것만으로 다음 탄이 자동으로 장전됩니다. 이 리볼버식 실린더는 총몸 옆으로 스윙아웃(Swing-out)되며, 재장전을 위해 사수가 직접 손으로 스프링을 감아줘야(수동 와인딩) 합니다. 덕분에 일반 단발 유탄 발사기보다 압도적인 화력 집중 능력을 제공하며, 장전된 유탄의 종류를 육안으로 쉽게 확인할 수 있어 다양한 전술 상황에 유연하게 대응할 수 있습니다. ",
             stats: {
                 recoil: "550",
                 sway: "200",
