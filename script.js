@@ -618,15 +618,15 @@ let weaponsData = {
             manufacturer: "Barrett Firearms",
             manufacturerLogo: "assets/barrett-logo.png",
             manufacturerUrl: "https://barrett.net/",
-            image: "",
+            image: "assets/m107a1.png",
             description: "Barrett Firearms에서 제작한 M107A1은 .50 BMG탄을 사용하는 반자동 대물 저격 소총입니다. M82 계열의 최신 개량형으로, 미군 제식\n장거리 저격소총(LRSR)으로 채택되어 운용 중입니다. 이 라이플은 기존 M107보다 약 1.8kg 더 가벼워졌으며, 특히 소음기 장착에 최적화된 설계가 특징입니다. 총구에는 소음기를 즉시 장착할 수 있는 원통형 총구 제퇴기(Muzzle Brake)가 부착되어 있습니다. 알루미늄 상부 리시버와 티타늄 부품을 사용하여 내식성을 높이고 무게를 줄였으며, 기본적으로 10발들이 탄창을 사용합니다. M107A1의 유효 사거리는 약 1,829m에 달하며, 그 존재 자체만으로도 전장에서 강력한 심리적 영향을 미칩니다.",
             stats: {
-                recoil: "?",
-                sway: "?",
-                ergonomics: "?",
-                accuracy: "?",
-                velocity: "?",
-                rpm: "?"
+                recoil: "212",
+                sway: "120",
+                ergonomics: "45",
+                accuracy: "0.33 MOA",
+                velocity: "978 m/s",
+                rpm: "500"
             }
         },
         {
