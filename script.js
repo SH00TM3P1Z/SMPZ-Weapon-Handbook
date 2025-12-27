@@ -489,7 +489,7 @@ let weaponsData = {
                 sway: "150",
                 ergonomics: "33",
                 accuracy: "0.37 MOA",
-                velocity: "1144 m/s",
+                velocity: "920 m/s",
                 rpm: "60"
             }
         },
@@ -502,11 +502,11 @@ let weaponsData = {
             image: "assets/mk18.png",
             description: "Mk-18 Mod 1 Extreme Distance Capable Semi-Automatic Rifle은 SWORD Defense Systems(구 SWORD International)이 제작한 .338 라푸아 매그넘, .338 노르마 매그넘, .300 노르마 매그넘 탄의 탄도 성능을 최대한 활용하도록 설계된 반자동 소총입니다. 이 시스템은 경량이면서도 기동성이 뛰어난 반자동 플랫폼에서 극장거리 사격 능력을 제공합니다. SWORD 고유의 쇼트 스트로크 가스 피스톤 시스템을 적용해 높은 정밀도, 신뢰성, 내구성을 갖추었으며, 양손 조작이 가능한 컨트롤과 인체공학적 설계, 모듈화 구조를 특징으로 합니다. Mk-18은 사냥꾼, 장거리 사격 애호가, 경기 사수들에게 훌륭한 선택지로 평가됩니다.",
             stats: {
-                recoil: "250",
+                recoil: "235",
                 sway: "150",
-                ergonomics: "32",
+                ergonomics: "45",
                 accuracy: "0.57 MOA",
-                velocity: "1126 m/s",
+                velocity: "890 m/s",
                 rpm: "380"
             }
         },
@@ -519,11 +519,11 @@ let weaponsData = {
             image: "assets/trgm10.png",
             description: "TRG M10은 Beretta Defense Technologies 그룹에 속한 Sako가 제작한 .338 라푸아 매그넘 탄을 사용하는 정밀 볼트액션 저격소총입니다. TRG M10은 매우 다재다능한 플랫폼으로, 본격적인 장거리 소총에서 더 컴팩트한 무기로 쉽게 전환할 수 있습니다. 이 소총은 여러 국가의 군, 경찰, 그리고 다양한 특수부대에서 사용하도록 설계되었습니다.",
             stats: {
-                recoil: "200",
+                recoil: "190",
                 sway: "130",
                 ergonomics: "41",
                 accuracy: "0.46 MOA",
-                velocity: "1100 m/s",
+                velocity: "920 m/s",
                 rpm: "60"
             }
         },
@@ -574,7 +574,7 @@ let weaponsData = {
                 sway: "120",
                 ergonomics: "40",
                 accuracy: "0.31 MOA",
-                velocity: "1091 m/s",
+                velocity: "870 m/s",
                 rpm: "500"
             }
         },
@@ -623,27 +623,27 @@ let weaponsData = {
             stats: {
                 recoil: "212",
                 sway: "120",
-                ergonomics: "45",
-                accuracy: "0.33 MOA",
-                velocity: "978 m/s",
+                ergonomics: "40",
+                accuracy: "0.90 MOA",
+                velocity: "895 m/s",
                 rpm: "500"
             }
         },
         {
             id: "10",
-            name: "CheyTac M200-Intervention",
+            name: "CheyTac M200 Intervention",
             manufacturer: "CheyTac",
             manufacturerLogo: "assets/cheytac-logo.png",
             manufacturerUrl: "https://cheytac.com/",
-            image: "",
+            image: "assets/m200.png",
             description: "CheyTac USA에서 제작한 M200 Intervention은 .408 CheyTac 탄을 사용하는 볼트액션 저격 소총입니다.\n이 라이플은 EDM Arms Windrunner와 유사한 설계 철학을 공유하며, .408 CheyTac 탄환의 우수한 탄도 특성을 바탕으로, 약 2,000m에\n달하는 초장거리에서도 탄두가 초음속을 유지하며 안정적인 정밀 사격이 가능하도록 설계되었습니다. 이 총기는 특히 세계 최고 수준의\n장거리 정밀도로 명성이 높습니다. 총열 교체 및 총기 분해가 용이한 설계가 특징이며, 휴대용 탄도 계산기와 기상 측정 장비와의 연계를\n전제로 운용되는 시스템형 소총으로, 실용성을 희생하고 오직 초장거리 명중률이라는 단 하나의 목표에만 매달린 집념의 총기입니다.",
             stats: {
-                recoil: "?",
-                sway: "?",
-                ergonomics: "?",
-                accuracy: "?",
-                velocity: "?",
-                rpm: "?"
+                recoil: "250",
+                sway: "125",
+                ergonomics: "38",
+                accuracy: "0.3 MOA",
+                velocity: "1017 m/s",
+                rpm: "60"
             }
         }
     ],
