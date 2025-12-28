@@ -645,6 +645,23 @@ let weaponsData = {
                 velocity: "1017 m/s",
                 rpm: "60"
             }
+        },
+        {
+            id: "11",
+            name: "Knight's Armament Company M110 SASS",
+            manufacturer: "Knight's Armament Company",
+            manufacturerLogo: "assets/kac-logo.png",
+            manufacturerUrl: "https://www.knightarmco.com/",
+            image: "assets/m110.png",
+            description: "M110은 나이츠 아머먼트 컴퍼니에서 개발한 반자동 저격 시스템입니다. 기존 볼트액션 M24를 대체하기 위해 미 육군에 채택되었으며\n신뢰성 높은 SR-25 플랫폼을 기반으로 개발되었습니다. 시가전 등 빠른 대응이 필요한 전장에서 저격수와 지정사수에게 운용됩니다.\nFDE 색상과 전용 소음기 시스템이 특징입니다.",
+            stats: {
+                recoil: "131",
+                sway: "98",
+                ergonomics: "54",
+                accuracy: "1.55 MOA",
+                velocity: "939 m/s",
+                rpm: "700"
+            }
         }
     ],
     "산탄총": [
