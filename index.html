@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMPZ 웨폰 도감</title>
+    <title>SMPZ 모드 도감</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,17 +12,31 @@
         <aside class="sidebar">
             <h1 class="sidebar-title">
                 <img src="assets/doc.png" alt="도감" class="sidebar-title-icon">
-                <span>SMPZ 웨폰 도감</span>
+                <span>SMPZ 모드 도감</span>
             </h1>
+            <div class="panel-switcher">
+                <button type="button" class="panel-btn active" data-panel="weapon">SMPZ 웨폰</button>
+                <button type="button" class="panel-btn" data-panel="gear">SMPZ 기어</button>
+            </div>
             <div class="search-container">
                 <div class="search-input-wrapper">
                     <img src="assets/search.png" alt="검색" class="search-icon">
-                    <input type="text" id="weaponSearch" class="weapon-search-input" placeholder="무기 검색...">
+                    <input type="text" id="itemSearch" class="weapon-search-input" placeholder="검색...">
                 </div>
             </div>
-            <ul class="category-list" id="categoryList">
-                <!-- 카테고리 목록이 여기에 동적으로 추가됩니다 -->
-            </ul>
+            <div id="weaponPanel" class="panel-content">
+                <ul class="category-list" id="categoryList">
+                    <!-- 무기 카테고리 목록이 여기에 동적으로 추가됩니다 -->
+                </ul>
+            </div>
+            <div id="gearPanel" class="panel-content" style="display: none;">
+                <div id="gearAddBtnWrap" class="admin-add-wrap" style="display: none;">
+                    <button type="button" id="gearAddBtn" class="add-weapon-btn">기어 추가</button>
+                </div>
+                <ul class="category-list" id="gearCategoryList">
+                    <!-- 기어 카테고리 목록이 여기에 동적으로 추가됩니다 -->
+                </ul>
+            </div>
             
             <!-- 관리자 로그인 버튼 -->
             <div class="admin-section">
@@ -96,8 +110,8 @@
                     <input type="url" id="weaponManufacturerUrl" placeholder="예: https://www.colt.com/">
                 </div>
                 <div class="form-group">
-                    <label for="weaponImage">이미지 경로 (선택사항):</label>
-                    <input type="text" id="weaponImage" placeholder="예: assets/m16a1.png">
+                    <label for="weaponImage">이미지 경로 (선택사항, 여러 장은 쉼표로 구분):</label>
+                    <input type="text" id="weaponImage" placeholder="예: assets/m16a1.png 또는 assets/a.png, assets/b.png">
                 </div>
                 <div class="form-group">
                     <label for="weaponDescription">설명 (선택사항):</label>
@@ -106,6 +120,77 @@
                 <div class="form-actions">
                     <button type="submit" class="submit-btn">저장</button>
                     <button type="button" class="cancel-btn" onclick="closeWeaponModal()">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 기어 추가/수정 모달 -->
+    <div id="gearModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="gearModalTitle">기어 추가</h2>
+            <form id="gearForm">
+                <input type="hidden" id="gearId">
+                <div class="form-group">
+                    <label for="gearName">기어 이름:</label>
+                    <input type="text" id="gearName" required>
+                </div>
+                <div class="form-group">
+                    <label for="gearCategory">카테고리:</label>
+                    <select id="gearCategory" required>
+                        <option value="">선택하세요</option>
+                        <option value="헬멧">헬멧</option>
+                        <option value="전신 방탄복">전신 방탄복</option>
+                        <option value="플레이트 캐리어">플레이트 캐리어</option>
+                        <option value="마스크">마스크</option>
+                        <option value="백팩">백팩</option>
+                        <option value="기어 부품">기어 부품</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gearManufacturer">제조사 (선택사항):</label>
+                    <input type="text" id="gearManufacturer" placeholder="예: Avon Protection">
+                </div>
+                <div class="form-group">
+                    <label for="gearManufacturerLogo">제조사 로고 경로 (선택사항):</label>
+                    <input type="text" id="gearManufacturerLogo" placeholder="예: assets/avon-logo.png">
+                </div>
+                <div class="form-group">
+                    <label for="gearManufacturerUrl">제조사 사이트 URL (선택사항):</label>
+                    <input type="url" id="gearManufacturerUrl" placeholder="예: https://www.avon-protection.com/">
+                </div>
+                <div class="form-group">
+                    <label for="gearImage">이미지 경로 (선택사항, 여러 장은 쉼표로 구분):</label>
+                    <input type="text" id="gearImage" placeholder="예: assets/m53a1.png 또는 assets/a.png, assets/b.png">
+                </div>
+                <div class="form-group">
+                    <label for="gearDescription">설명 (선택사항):</label>
+                    <textarea id="gearDescription" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="gearBulletDamageProtection">탄 데미지 보호률 (0~100, 선택사항):</label>
+                    <input type="number" id="gearBulletDamageProtection" min="0" max="100" placeholder="예: 50">
+                </div>
+                <div class="form-group">
+                    <label for="gearBloodDamageProtection">유혈 데미지 보호률 (0~100, 선택사항):</label>
+                    <input type="number" id="gearBloodDamageProtection" min="0" max="100" placeholder="예: 30">
+                </div>
+                <div class="form-group">
+                    <label for="gearShockDamageProtection">충격 데미지 보호률 (0~100, 선택사항):</label>
+                    <input type="number" id="gearShockDamageProtection" min="0" max="100" placeholder="예: 80">
+                </div>
+                <div class="form-group gear-filter-charge-field">
+                    <label for="gearFilterChargeable">차콜 테블릿 필터 충전 가능 (호흡기/방독면용, 선택사항):</label>
+                    <select id="gearFilterChargeable">
+                        <option value="">선택 안 함</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="submit-btn">저장</button>
+                    <button type="button" class="cancel-btn" onclick="closeGearModal()">취소</button>
                 </div>
             </form>
         </div>
