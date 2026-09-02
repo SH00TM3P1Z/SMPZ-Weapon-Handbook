@@ -1624,6 +1624,17 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
             } else if (activeMetricKey === 'item_slots' && (item.itemSlots !== undefined && item.itemSlots !== null)) {
                 const slotText = item.itemSize ? `${item.itemSize} (${item.itemSlots}칸)` : `${item.itemSlots}칸`;
                 specs.push({ metricKey: 'item_slots', label: '크기', text: slotText, tagClass: 'spec-size' });
+            } else if (activeMetricKey === 'hitpoints') {
+                const hp = DataParsers.hitpoints(item);
+                if (hp !== null) {
+                    specs.push({ metricKey: 'hitpoints', label: '내구도', text: `내구도 ${hp}`, tagClass: 'spec-durability' });
+                }
+            } else if (activeMetricKey === 'cargo_slots') {
+                const cargo = DataParsers.cargoSlots(item);
+                if (cargo !== null && cargo > 0) {
+                    const cargoText = item.cargoSize ? `수납 ${item.cargoSize} (${cargo}칸)` : `수납 ${cargo}칸`;
+                    specs.push({ metricKey: 'cargo_slots', label: '수납', text: cargoText, tagClass: 'spec-cargo' });
+                }
             }
         }
     }
@@ -2644,9 +2655,9 @@ const PROTECTION_AREAS_KO_MAP = {
     Stomach: '복부',
     LeftSide: '좌측 옆구리',
     RightSide: '우측 옆구리',
-    Groin: '낭심(사타구니)',
-    Head: '두부(머리)',
-    Face: '안면(얼굴)',
+    Groin: '낭심',
+    Head: '머리',
+    Face: '안면',
     Ears: '귀',
     Eyes: '눈',
     Arms: '팔',
@@ -3596,6 +3607,20 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
                     bar.appendChild(barFill);
                     statsList.appendChild(bar);
                 });
+            }
+
+            if (gear.stats.hitpoints && gear.stats.hitpoints !== '-') {
+                const row = document.createElement('div');
+                row.className = 'weapon-stat-row';
+                const label = document.createElement('span');
+                label.className = 'weapon-stat-label';
+                label.textContent = '내구도:';
+                const value = document.createElement('span');
+                value.className = 'weapon-stat-value';
+                value.textContent = gear.stats.hitpoints;
+                row.appendChild(label);
+                row.appendChild(value);
+                statsList.appendChild(row);
             }
 
             if (gear.stats.weight && gear.stats.weight !== '-') {

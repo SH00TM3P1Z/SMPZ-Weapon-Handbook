@@ -735,6 +735,12 @@ body {
     color: #9f8fb3;
 }
 
+.core-spec-tag.spec-durability {
+    background: #1e1b18;
+    border-color: #383025;
+    color: #b59e7a;
+}
+
 /* 정렬 기준 스펙 하이라이트 */
 .core-spec-tag.spec-highlight {
     background: #24221c !important;
@@ -993,6 +999,8 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 /* 이미지 탐색 화살표 */
@@ -1310,24 +1318,6 @@ body {
     background: #222222;
 }
 
-    .floating-nav-dock {
-        bottom: 16px;
-        right: 16px;
-        padding: 5px 6px;
-        gap: 5px;
-    }
-
-    .floating-nav-btn {
-        padding: 7px 11px;
-        font-size: 12px;
-    }
-
-    .floating-top-btn {
-        width: 30px;
-        height: 30px;
-    }
-}
-
 /* ----------------------------------------------------
    3D Inspect & Model Viewer Styling (DayZ Tactical Theme)
 ---------------------------------------------------- */
@@ -1337,8 +1327,8 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 16px;
     text-align: center;
 }
 
@@ -1355,14 +1345,20 @@ body {
     color: #888888;
     border: 1px solid #333333;
     border-radius: 6px;
-    padding: 6px 16px;
+    width: 72px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
     font-size: 13px;
     font-weight: 600;
+    line-height: 1;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .gallery-mode-btn:hover {
