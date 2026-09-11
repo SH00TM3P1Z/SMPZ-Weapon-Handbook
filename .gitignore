@@ -27,3 +27,6 @@ tools/.config.json
 *.temp
 *.backup.js
 test_*.js
+
+# 언팩된 모드팩 데이터 폴더
+/extracted

@@ -764,6 +764,12 @@ body {
     color: #8595a8;
 }
 
+.core-spec-tag.spec-health {
+    background: #181d1a;
+    border-color: #26332a;
+    color: #86a88e;
+}
+
 .core-spec-tag.spec-shock {
     background: #1d1a18;
     border-color: #332b25;
@@ -800,11 +806,6 @@ body {
     color: #999999;
 }
 
-.core-spec-tag.spec-rpm {
-    background: #1d181c;
-    border-color: #332630;
-    color: #a8829d;
-}
 
 .core-spec-tag.spec-moa {
     background: #171c1b;
@@ -986,37 +987,241 @@ body {
     justify-content: center;
 }
 
+.detail-toolbar,
+.detail-context {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.detail-toolbar {
+    justify-content: space-between;
+}
+
+.detail-context {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.detail-category {
+    padding: 4px 9px;
+    color: #ddd;
+    background: #262626;
+    border: 1px solid #444;
+    border-radius: 6px;
+}
+
+.detail-back-btn,
+.detail-section-nav button,
+.gallery-zoom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 7px 10px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: #ccc;
+    background: #262626;
+    border: 1px solid #444;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.detail-back-btn:hover,
+.detail-section-nav button:hover,
+.gallery-zoom-btn:hover {
+    color: #fff;
+    background: #333;
+    border-color: #777;
+}
+
+.detail-section-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-top: 1px solid #333;
+    padding: 16px 0 24px;
+}
+
+.detail-section-nav button {
+    background: transparent;
+    border-color: #333;
+    min-width: 76px;
+}
+
+.detail-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 24px;
+}
+
+.detail-overview-no-stats {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.detail-media-column {
+    display: grid;
+    gap: 24px;
+    min-width: 0;
+}
+
+.detail-description-section {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+}
+
+.detail-description-section h3 {
+    margin-bottom: 10px;
+}
+
+.detail-stat-item {
+    padding: 11px 0;
+    border-bottom: 1px solid #2b2b2b;
+}
+
+.detail-stat-item:first-child {
+    padding-top: 0;
+}
+
+.detail-stat-item:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.detail-stat-item-meter {
+    display: grid;
+    gap: 7px;
+}
+
+.detail-related {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.detail-related .attachment-slots-container,
+.detail-related .gear-filter-charge-panel {
+    margin-top: 0;
+}
+
+.detail-related .attachment-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px;
+}
+
+.detail-related .attachment-slot-btn {
+    min-height: 44px;
+    width: 100%;
+    justify-content: space-between;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px 12px;
+    white-space: normal;
+}
+
+.detail-related .slot-label {
+    overflow-wrap: anywhere;
+}
+
+.detail-related .slot-count {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.gallery-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.gallery-footer[hidden],
+.gallery-zoom-btn[hidden] {
+    display: none;
+}
+
+.gallery-counter {
+    color: #999;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.detail-compare-legend {
+    display: grid;
+    gap: 6px;
+    padding: 10px 12px;
+    margin-bottom: 16px;
+    background: #222;
+    border-radius: 6px;
+    color: #bbb;
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.detail-compare-value {
+    color: #aaa;
+    font-size: 12px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.weapon-detail [id^="detail-section-"] {
+    scroll-margin-top: 90px;
+}
+
+.weapon-detail :is(button, a):focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+}
+
+.weapon-detail :is(.color-variant-chip, .barrel-adjustment-chip) {
+    min-height: 32px;
+    font-family: inherit;
+    font-size: 12px;
+}
+
+.weapon-detail .image-nav-arrow:focus-visible {
+    outline-offset: -4px;
+}
+
 /* 무기 상세 정보 */
 .weapon-detail {
     width: 100%;
-    max-width: 1040px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    max-width: 1200px;
+    min-width: 0;
+    padding-bottom: 64px;
 }
 
 .weapon-detail-card {
     background: #1a1a1a;
-    border-radius: 15px;
-    padding: 40px;
-    box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 28px;
     width: 100%;
-    text-align: center;
-    border: 2px solid #ffffff;
+    text-align: left;
+    border: 1px solid #333;
 }
 
 .weapon-detail-name-container {
-    margin-bottom: 20px;
+    margin: 22px 0;
 }
 
 .weapon-detail-name {
-    font-size: 36px;
-    font-weight: bold;
-    color: #ffffff;
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fff;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
+    gap: 14px;
     flex-wrap: wrap;
 }
 
@@ -1046,43 +1251,44 @@ body {
 }
 
 .weapon-manufacturer-text {
-    font-size: 24px;
-    font-weight: normal;
-    color: #ffffff;
-    margin-right: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #aaa;
 }
 
 .weapon-name-text {
     display: inline-block;
+    overflow-wrap: anywhere;
 }
 
 .weapon-name-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .item-web-search-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     border-radius: 6px;
-    color: #8a99a8;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    transition: all 0.2s ease;
+    color: #bbb;
+    background: #222;
+    border: 1px solid #444;
+    transition: background 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
     text-decoration: none;
     flex-shrink: 0;
 }
 
 .item-web-search-btn:hover {
-    color: #60a5fa;
-    background: rgba(96, 165, 250, 0.15);
-    border-color: rgba(96, 165, 250, 0.35);
-    transform: translateY(-1px);
+    color: #fff;
+    background: #333;
+    border-color: #777;
 }
 
 .item-web-search-btn:active {
@@ -1093,38 +1299,29 @@ body {
     display: block;
 }
 
-.weapon-detail-divider {
-    height: 2px;
-    background: #ffffff;
-    margin-bottom: 30px;
-}
+
 
 /* 갤러리 패널 */
 .gallery-panel-wrapper {
     width: 100%;
-    margin-bottom: 30px;
-    flex-shrink: 0;
+    min-width: 0;
 }
 
 .gallery-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #ffffff;
-    text-align: center;
-    margin-bottom: 2px;
-    letter-spacing: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #eee;
 }
 
 .weapon-detail-image-container {
     width: 100%;
-    aspect-ratio: 16 / 9;
-    min-height: 280px;
-    flex-shrink: 0;
+    aspect-ratio: 4 / 3;
+    min-height: 240px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #0a0a0a;
-    border-radius: 10px;
+    border-radius: 8px;
     overflow: hidden;
     border: 1px solid #333;
     position: relative;
@@ -1234,64 +1431,59 @@ body {
 }
 
 .weapon-detail-description {
-    color: #ffffff;
-    font-size: 16px;
-    line-height: 1.8;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.85;
     text-align: left;
-    padding: 20px;
-    background: #1a1a1a;
-    border-radius: 10px;
     white-space: pre-wrap;
-    border: 1px solid #333;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .weapon-description-placeholder {
-    width: 100%;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #1a1a1a;
-    color: #666;
-    font-size: 18px;
-    border-radius: 10px;
-    padding: 20px;
-    border: 1px solid #333;
+    color: #999;
+    font-size: 14px;
+    line-height: 1.7;
 }
 
 /* 능력치 섹션 */
 .weapon-stats-container {
     width: 100%;
-    margin-top: 16px;
+    min-width: 0;
+    padding: 20px;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 8px;
 }
 
 .weapon-stats-header {
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 36px;
+    margin-bottom: 16px;
 }
 
 .weapon-stats-spacer {
-    width: 72px;
+    display: none;
 }
 
 .weapon-stats-title {
-    flex: 1;
-    text-align: center;
-    font-weight: bold;
-    color: #ffffff;
-    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #eee;
+    font-size: 16px;
 }
 
 .weapon-compare-btn {
-    padding: 4px 10px;
-    border-radius: 999px;
-    border: 1px solid #ffffff;
-    background: transparent;
-    color: #ffffff;
+    padding: 7px 12px;
+    min-height: 36px;
+    border-radius: 6px;
+    border: 1px solid #555;
+    background: #262626;
+    color: #fff;
     font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -1303,20 +1495,23 @@ body {
 .weapon-stats-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 0;
 }
 
 .weapon-stat-row {
-    display: block;
-    font-size: 16px;
-    line-height: 1.8;
-    color: #ffffff;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #eee;
 }
 
 .weapon-stat-label {
     display: inline-block;
-    opacity: 0.85;
-    margin-right: 4px;
+    color: #aaa;
+    flex-shrink: 0;
 }
 
 .weapon-stat-value:has(.stat-footnote) {
@@ -1330,7 +1525,11 @@ body {
     font-size: 0.8em;
     font-weight: bold;
     vertical-align: super;
-    margin-left: 1px;
+    margin-left: 3px;
+    padding: 2px 4px;
+    background: transparent;
+    border: 0;
+    border-radius: 3px;
     cursor: help;
     user-select: none;
     opacity: 0.85;
@@ -1346,8 +1545,8 @@ body {
     content: attr(data-tooltip);
     position: absolute;
     bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%) translateY(4px);
+    right: 0;
+    transform: translateY(4px);
     background: #1e1e1e;
     color: #f0f0f0;
     padding: 6px 12px;
@@ -1355,8 +1554,9 @@ body {
     font-size: 13px;
     font-weight: 500;
     line-height: 1.5;
-    white-space: pre;
+    white-space: pre-wrap;
     width: max-content;
+    max-width: min(280px, calc(100vw - 112px));
     text-align: left;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
     border: 1px solid #444444;
@@ -1384,13 +1584,15 @@ body {
     z-index: 1000;
 }
 
+.stat-footnote:focus::after,
 .stat-footnote:hover::after,
 .weapon-stat-value:hover .stat-footnote::after {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
 }
 
+.stat-footnote:focus::before,
 .stat-footnote:hover::before,
 .weapon-stat-value:hover .stat-footnote::before {
     opacity: 1;
@@ -1400,20 +1602,26 @@ body {
 
 .weapon-stat-value {
     display: inline-block;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    min-width: 0;
 }
 
 .weapon-stat-bar {
     width: 100%;
-    height: 8px;
-    background: #111111;
-    border-radius: 10px;
-    border: 1px solid #333333;
+    height: 5px;
+    background: #333;
+    border-radius: 4px;
     overflow: hidden;
 }
 
 .weapon-stat-bar-fill {
     height: 100%;
-    background: #ffffff;
+    background: #ccc;
+    border-radius: inherit;
+    transition: width 0.2s ease;
 }
 
 .weapon-stat-bar-compare .weapon-stat-bar-fill {
@@ -1430,22 +1638,16 @@ body {
 
 /* 방호 부위 / 사용 탄종 / 발사 모드 칩 스타일 */
 .weapon-stat-row-areas {
-    margin-top: 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 4px;
+    align-items: flex-start;
 }
 
 .protection-chips-wrapper {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 6px;
-    margin-top: 2px;
+    min-width: 0;
 }
 
 .protection-area-chip {
@@ -1459,6 +1661,61 @@ body {
     color: #e6e6e6;
     line-height: 1.3;
     letter-spacing: 0.2px;
+}
+
+.color-variant-chip {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.color-variant-chip:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.color-variant-chip.active {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: #ffffff;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+}
+
+.paint-status-chip.paint-status-yes,
+.barrel-status-chip.barrel-status-yes {
+    background: rgba(46, 204, 113, 0.15);
+    border-color: rgba(46, 204, 113, 0.45);
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.paint-status-chip.paint-status-no,
+.barrel-status-chip.barrel-status-no {
+    background: rgba(231, 76, 60, 0.12);
+    border-color: rgba(231, 76, 60, 0.35);
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+.barrel-adjustment-chip {
+    color: #e6e6e6;
+    font: inherit;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.barrel-adjustment-chip:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.barrel-adjustment-chip.active {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: #ffffff;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
 }
 
 /* 기어 필터 충전 패널 */
@@ -1540,21 +1797,22 @@ body {
 ---------------------------------------------------- */
 .gallery-header-row {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
-    gap: 10px;
-    margin-bottom: 16px;
-    text-align: center;
+    gap: 12px;
+    min-height: 36px;
+    margin-bottom: 12px;
 }
 
 .gallery-mode-switch {
     display: inline-flex;
-    justify-content: center;
     align-items: center;
-    gap: 8px;
-    margin: 0 auto;
+    gap: 4px;
+    padding: 3px;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
 }
 
 .gallery-mode-btn {
@@ -1697,12 +1955,12 @@ model-viewer.weapon-model-viewer:active {
 
 /* 장착 가능한 부착물 및 상위 아이템 슬롯 섹션 */
 .attachment-slots-container {
-    margin-top: 20px;
-    padding: 16px 20px;
-    background: #1a1a1a;
+    padding: 20px;
+    background: #151515;
     border-radius: 8px;
-    border: 1px solid #333333;
+    border: 1px solid #333;
     width: 100%;
+    min-width: 0;
 }
 
 .attachment-slots-container + .attachment-slots-container,
@@ -1763,6 +2021,26 @@ model-viewer.weapon-model-viewer:active {
     opacity: 0.85;
 }
 
+.attachment-slot-btn.conditional-slot-btn {
+    border-color: #8a6d2f;
+    background: #302817;
+}
+
+.attachment-slot-btn.conditional-slot-btn:hover {
+    border-color: #c59a3a;
+    background: #3d321c;
+}
+
+.grid-card-compatibility-note {
+    margin-top: -2px;
+    padding: 0 8px 6px;
+    color: #d9ad4a;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+}
+
 .grid-back-wrap {
     width: 100%;
     display: flex;
@@ -1796,9 +2074,25 @@ model-viewer.weapon-model-viewer:active {
     border-radius: 10px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 5px 30px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
     animation: slideDown 0.3s;
-    border: 2px solid #ffffff;
+    border: 1px solid #444;
+    max-height: calc(100dvh - 64px);
+    overflow-y: auto;
+}
+
+.detail-modal-open {
+    overflow: hidden;
+}
+
+.modal button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 12px;
 }
 
 @keyframes fadeIn {
@@ -1824,6 +2118,11 @@ model-viewer.weapon-model-viewer:active {
     font-weight: bold;
     cursor: pointer;
     line-height: 20px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #262626;
 }
 
 .close:hover {
@@ -1872,6 +2171,7 @@ model-viewer.weapon-model-viewer:active {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    border: 1px solid #555;
 }
 
 .close-image:hover {
@@ -1906,7 +2206,91 @@ model-viewer.weapon-model-viewer:active {
 }
 
 /* 반응형 디자인 */
+@media (max-width: 960px) {
+    .detail-overview {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .weapon-detail-image-container {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .weapon-detail *,
+    .weapon-detail *::before,
+    .weapon-detail *::after,
+    .modal,
+    .modal * {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
 @media (max-width: 768px) {
+    .detail-toolbar {
+        gap: 12px;
+    }
+
+    .detail-context {
+        gap: 6px;
+        font-size: 11px;
+    }
+
+    .detail-section-nav {
+        padding-bottom: 20px;
+    }
+
+    .detail-section-nav button {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .detail-back-btn,
+    .detail-section-nav button,
+    .gallery-zoom-btn,
+    .gallery-mode-btn {
+        min-height: 40px;
+    }
+
+    .weapon-detail .weapon-manufacturer-logo {
+        max-width: 100px;
+        max-height: 32px;
+    }
+
+    .weapon-stats-container,
+    .attachment-slots-container {
+        padding: 16px;
+    }
+
+    .detail-related .attachment-slots-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .weapon-detail [id^="detail-section-"] {
+        scroll-margin-top: 20px;
+    }
+
+    .weapon-detail .weapon-stat-row-areas {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .weapon-detail .protection-chips-wrapper {
+        justify-content: flex-start;
+    }
+
+    .weapon-detail :is(.color-variant-chip, .barrel-adjustment-chip) {
+        min-height: 40px;
+    }
+
+    .model-viewer-bottom-bar {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
     .topbar {
         position: relative;
         height: auto;
@@ -2025,11 +2409,11 @@ model-viewer.weapon-model-viewer:active {
     }
 
     .weapon-detail-card {
-        padding: 30px 20px;
+        padding: 16px;
     }
     
     .weapon-detail-name {
-        font-size: 28px;
+        font-size: 24px;
     }
     
     .weapon-manufacturer-text {
@@ -2037,12 +2421,11 @@ model-viewer.weapon-model-viewer:active {
     }
     
     .weapon-stats-title {
-        font-size: 22px;
+        font-size: 16px;
     }
     
     .weapon-compare-btn {
-        font-size: 11px;
-        padding: 3px 8px;
+        min-height: 40px;
     }
     
     .weapon-stats-spacer {
@@ -2051,7 +2434,6 @@ model-viewer.weapon-model-viewer:active {
     
     .weapon-detail-description {
         font-size: 14px;
-        padding: 15px;
     }
     
     .weapon-stat-row {

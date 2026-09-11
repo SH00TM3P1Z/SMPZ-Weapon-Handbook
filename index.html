@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SMPZ 모드 도감</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 </head>
 <body>
     <!-- 상단바 -->
@@ -109,16 +108,17 @@
         </div>
         <div class="weapon-detail" id="weaponDetail">
             <p class="empty-message">상단 메뉴에서 카테고리를 선택하고 항목을 클릭하여 정보를 확인하세요.</p>
+        </div>
     </main>
 
     <!-- 플로팅 네비게이션 독 (이전으로 / 목록으로 / 맨 위로) -->
     <nav id="floatingNav" class="floating-nav-dock" aria-label="화면 이동"></nav>
 
     <!-- 능력치 비교 모달 -->
-    <div id="compareModal" class="modal">
+    <div id="compareModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>능력치 비교</h2>
+            <button type="button" class="close" aria-label="비교 창 닫기">&times;</button>
+            <h2 id="compareTitle">능력치 비교</h2>
             <p class="compare-desc">현재 선택된 무기와 비교할 무기를 선택하세요.</p>
             <div id="compareCurrentWeapon" class="compare-current"></div>
             <div id="compareWeaponList" class="compare-list"></div>
@@ -126,8 +126,8 @@
     </div>
 
     <!-- 이미지 확대 모달 -->
-    <div id="imageModal" class="modal image-modal">
-        <span class="close-image">&times;</span>
+    <div id="imageModal" class="modal image-modal" role="dialog" aria-modal="true" aria-label="이미지 확대">
+        <button type="button" class="close-image" aria-label="확대 이미지 닫기">&times;</button>
         <img id="modalImage" class="modal-image-content" src="" alt="">
     </div>
 

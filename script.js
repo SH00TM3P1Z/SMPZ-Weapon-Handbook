@@ -7,6 +7,8 @@ let currentGear = null;
 let lastGalleryImageIndex = 0;
 let lastGridScrollY = 0;
 let compareTarget = null;
+let activeDetailModal = null;
+let detailModalReturnFocus = null;
 const APP_STATE_KEY = 'smpz_handbook_state';
 
 // 네비게이션 히스토리 스택
@@ -65,6 +67,25 @@ const CATEGORY_LABELS = {
 function getCategoryLabel(categoryKey) {
     if (!categoryKey) return '';
     return CATEGORY_LABELS[categoryKey] || categoryKey;
+}
+
+function formatSize(size) {
+    if (!size) return '';
+    if (Array.isArray(size)) return size.join('x');
+    return String(size);
+}
+
+function formatMagnification(mag) {
+    if (!mag && mag !== 0) return '';
+    if (typeof mag === 'number') return `${mag}x`;
+    if (Array.isArray(mag)) {
+        if (mag.length === 0) return '';
+        if (mag.length === 1) return `${mag[0]}x`;
+        return mag[0] === mag[1] ? `${mag[0]}x` : `${mag[0]}-${mag[1]}x`;
+    }
+    const s = String(mag).trim();
+    if (!s) return '';
+    return s.endsWith('x') ? s : `${s}x`;
 }
 
 // 슬롯명 한국어 매핑 사전
@@ -491,15 +512,133 @@ function getAllDatabaseItems() {
     return items;
 }
 
-// 복수 슬롯 키 중 하나라도 만족하는 아이템 목록 필터링 (inventorySlots 기준 중복 제거)
-function getItemsForSlotKeys(slotKeys) {
+function getItemClassIds(item) {
+    if (!item) return [];
+    const ids = [];
+    if (item.id) ids.push(item.id);
+    if (Array.isArray(item.color)) {
+        item.color.forEach(variant => {
+            if (variant && variant.id) ids.push(variant.id);
+        });
+    }
+    return [...new Set(ids)];
+}
+
+function constraintContainsItem(constraintIds, item) {
+    if (!Array.isArray(constraintIds)) return false;
+    const itemIds = getItemClassIds(item);
+    return itemIds.some(id => constraintIds.includes(id));
+}
+
+function getDatabaseItemByConstraintId(id) {
+    return getAllDatabaseItems().find(item => getItemClassIds(item).includes(id)) || null;
+}
+
+function getItemsByConstraintIds(ids) {
+    if (!Array.isArray(ids)) return [];
+    const idSet = new Set(ids);
+    const seen = new Set();
+    return getAllDatabaseItems().filter(item => {
+        if (!item || seen.has(item.id) || !getItemClassIds(item).some(id => idSet.has(id))) return false;
+        seen.add(item.id);
+        return true;
+    });
+}
+
+function getConditionalRulesForSlot(parentItem, slot) {
+    const bySlot = parentItem?.conditionalAttachmentsBySlot;
+    return bySlot && Array.isArray(bySlot[slot]) ? bySlot[slot] : [];
+}
+
+// 장착 상태가 조건을 만족하는지 확인한다.
+function isConditionalCompatibilityRuleActive(rule, equippedBySlot = {}) {
+    if (!rule || !Array.isArray(rule.conditions)) return false;
+    return rule.conditions.every(condition => {
+        if (condition.type !== 'attachment' || condition.operator !== 'isKindOf') return false;
+        const rawEquipped = equippedBySlot[condition.slot];
+        const equipped = Array.isArray(rawEquipped) ? rawEquipped : (rawEquipped ? [rawEquipped] : []);
+        const hasMatchingKind = equipped.some(item => constraintContainsItem(condition.items, item));
+        return condition.present ? hasMatchingKind : !hasMatchingKind;
+    });
+}
+
+function getActiveConditionalRule(parentItem, slot, equippedBySlot = {}) {
+    return getConditionalRulesForSlot(parentItem, slot)
+        .find(rule => isConditionalCompatibilityRuleActive(rule, equippedBySlot)) || null;
+}
+
+function getConditionLabel(rule) {
+    if (!rule || !Array.isArray(rule.conditions)) return '';
+    return rule.conditions.map(condition => {
+        const conditionItem = Array.isArray(condition.items)
+            ? getDatabaseItemByConstraintId(condition.items[0])
+            : null;
+        const itemName = conditionItem?.name || getSlotDisplayName(condition.slot);
+        return condition.present ? `${itemName} 장착 시` : '기본 장착';
+    }).filter(Boolean).join(' + ');
+}
+
+// config.cpp 슬롯 매칭 후 런타임 CanPutAsAttachment / CanReceiveAttachment
+// 클래스 제약까지 양방향으로 확인한다. 빈 allow 목록은 명시적인 호환 대상 없음이다.
+function isRuntimeAttachmentCompatible(parentItem, attachmentItem, candidateSlots = null, equippedBySlot = {}) {
+    if (!parentItem || !attachmentItem) return false;
+
+    if (Array.isArray(attachmentItem.allowedParents) &&
+        !constraintContainsItem(attachmentItem.allowedParents, parentItem)) {
+        return false;
+    }
+    if (constraintContainsItem(attachmentItem.deniedParents, parentItem)) {
+        return false;
+    }
+    if (Array.isArray(parentItem.allowedAttachments) &&
+        !constraintContainsItem(parentItem.allowedAttachments, attachmentItem)) {
+        return false;
+    }
+    if (constraintContainsItem(parentItem.deniedAttachments, attachmentItem)) {
+        return false;
+    }
+
+    const parentSlots = new Set(Array.isArray(parentItem.attachmentSlots) ? parentItem.attachmentSlots : []);
+    const requestedSlots = candidateSlots ? new Set(candidateSlots) : null;
+    const sharedSlots = (Array.isArray(attachmentItem.inventorySlots) ? attachmentItem.inventorySlots : [])
+        .filter(slot => parentSlots.has(slot) && (!requestedSlots || requestedSlots.has(slot)));
+    if (sharedSlots.length === 0) return false;
+
+    return sharedSlots.some(slot => {
+        const allowedBySlot = parentItem.allowedAttachmentsBySlot;
+        if (allowedBySlot && Object.prototype.hasOwnProperty.call(allowedBySlot, slot) &&
+            !constraintContainsItem(allowedBySlot[slot], attachmentItem)) {
+            return false;
+        }
+        const deniedBySlot = parentItem.deniedAttachmentsBySlot;
+        if (deniedBySlot && Object.prototype.hasOwnProperty.call(deniedBySlot, slot) &&
+            constraintContainsItem(deniedBySlot[slot], attachmentItem)) {
+            return false;
+        }
+        const activeConditionalRule = getActiveConditionalRule(parentItem, slot, equippedBySlot);
+        if (activeConditionalRule) {
+            if (Array.isArray(activeConditionalRule.allowed) &&
+                !constraintContainsItem(activeConditionalRule.allowed, attachmentItem)) {
+                return false;
+            }
+            if (constraintContainsItem(activeConditionalRule.denied, attachmentItem)) {
+                return false;
+            }
+        }
+        return true;
+    });
+}
+
+// 복수 슬롯 키 중 하나라도 만족하고 런타임 제약도 통과하는 아이템 목록
+function getItemsForSlotKeys(slotKeys, parentItem = null) {
     const all = getAllDatabaseItems();
     const results = [];
     const seen = new Set();
     const keysSet = new Set(slotKeys);
     for (const item of all) {
         if (item && Array.isArray(item.inventorySlots)) {
-            if (item.inventorySlots.some(s => keysSet.has(s))) {
+            if (item.inventorySlots.some(s => keysSet.has(s)) &&
+                (!parentItem || isRuntimeAttachmentCompatible(parentItem, item, slotKeys))) {
                 if (!seen.has(item.id)) {
                     seen.add(item.id);
                     results.push(item);
@@ -631,23 +770,65 @@ function popNavState() {
     }
 }
 
+function isSubGridCategory(categoryKey) {
+    if (!categoryKey || typeof categoryKey !== 'string') return false;
+    return categoryKey.startsWith('slot_group_') ||
+           categoryKey.startsWith('weapon_magazines_') ||
+           categoryKey.startsWith('parent_cat_');
+}
+
 // 최초 루트 그리드/목록으로 한 번에 복귀
 function resetToRootGrid() {
+    let targetView = null;
+    if (Array.isArray(navStack) && navStack.length > 0) {
+        const rootInStack = navStack.find(s => s && s.type === 'grid' && !isSubGridCategory(s.categoryKey));
+        if (rootInStack) {
+            targetView = rootInStack;
+        }
+    }
+    if (!targetView && rootGridState) {
+        targetView = { ...rootGridState, type: 'grid' };
+    }
+    if (!targetView && Array.isArray(navStack) && navStack.length > 0 && navStack[0]?.type === 'grid') {
+        targetView = navStack[0];
+    }
+
     navStack = [];
     preSearchView = null;
+    compareTarget = null;
+
     const searchInput = document.getElementById('itemSearch');
-    if (searchInput) searchInput.value = '';
-    backToGrid();
-    if (history.state) {
-        history.pushState(captureCurrentView(), '', window.location.pathname);
+    if (searchInput && targetView?.categoryKey !== 'search') {
+        searchInput.value = '';
     }
+
+    if (targetView) {
+        restoreView(targetView);
+        lastGridState = {
+            title: targetView.title,
+            items: targetView.items,
+            categoryKey: targetView.categoryKey,
+            panelType: targetView.panelType,
+            searchQuery: targetView.searchQuery || '',
+            sortMetric: targetView.sortMetric,
+            sortOrder: targetView.sortOrder,
+            activeChips: targetView.activeChips
+        };
+    } else {
+        renderItemGrid('all', 'weapon');
+    }
+
+    try {
+        history.pushState(captureCurrentView(), '', window.location.pathname);
+    } catch (e) {}
+
     updateFloatingNav();
 }
 
 // 호환 아이템 그리드 표시
 function showSlotGroupAttachments(parentItem, groupName, slotKeys) {
     pushNavState(captureCurrentView());
-    const matchedItems = getItemsForSlotKeys(slotKeys);
+    const matchedItems = getItemsForSlotKeys(slotKeys, parentItem);
     const parentName = parentItem && parentItem.name ? parentItem.name : '';
     const fullTitle = parentName ? `${parentName} > ${groupName}` : groupName;
     showGridView(fullTitle, matchedItems, 'slot_group_' + slotKeys[0], 'attachment');
@@ -659,9 +840,9 @@ function showSlotGroupAttachments(parentItem, groupName, slotKeys) {
 function createAttachmentSlotsSection(item) {
     const rawSlots = Array.isArray(item?.attachmentSlots) ? item.attachmentSlots : [];
     const groupedSlots = getGroupedAttachmentSlots(rawSlots);
-    const matchedMags = getCompatibleMagazinesForWeapon(item);
+    const magazineGroups = getMagazineCompatibilityGroups(item);
 
-    if (groupedSlots.length === 0 && matchedMags.length === 0) {
+    if (groupedSlots.length === 0 && magazineGroups.length === 0) {
         return null;
     }
 
@@ -670,9 +851,9 @@ function createAttachmentSlotsSection(item) {
 
     const header = document.createElement('div');
     header.className = 'weapon-stats-header';
-    const title = document.createElement('div');
+    const title = document.createElement('h3');
     title.className = 'weapon-stats-title';
-    title.textContent = '- 장착 가능한 부착물 -';
+    title.textContent = '이 아이템에 장착 가능한 부착물';
     header.appendChild(title);
     container.appendChild(header);
 
@@ -680,7 +861,7 @@ function createAttachmentSlotsSection(item) {
     slotsGrid.className = 'attachment-slots-grid';
 
     groupedSlots.forEach(group => {
-        const matchedItems = getItemsForSlotKeys(group.slotKeys);
+        const matchedItems = getItemsForSlotKeys(group.slotKeys, item);
         const count = matchedItems.length;
 
         const btn = document.createElement('button');
@@ -708,14 +889,16 @@ function createAttachmentSlotsSection(item) {
         slotsGrid.appendChild(btn);
     });
 
-    if (matchedMags.length > 0) {
+    magazineGroups.forEach((magazineGroup, groupIndex) => {
+        const matchedMags = magazineGroup.items;
         const magBtn = document.createElement('button');
         magBtn.type = 'button';
         magBtn.className = 'attachment-slot-btn weapon-mag-btn';
+        if (magazineGroup.conditional) magBtn.classList.add('conditional-slot-btn');
 
         const magLabel = document.createElement('span');
         magLabel.className = 'slot-label';
-        magLabel.textContent = '탄창';
+        magLabel.textContent = magazineGroup.label;
 
         const magCount = document.createElement('span');
         magCount.className = 'slot-count';
@@ -726,12 +909,12 @@ function createAttachmentSlotsSection(item) {
 
         magBtn.onclick = () => {
             pushNavState(captureCurrentView());
-            const fullTitle = item.name ? `${item.name} > 탄창` : '탄창';
-            showGridView(fullTitle, matchedMags, 'weapon_magazines_' + item.id, 'attachment');
+            const fullTitle = item.name ? `${item.name} > ${magazineGroup.label}` : magazineGroup.label;
+            showGridView(fullTitle, matchedMags, `weapon_magazines_${item.id}_${groupIndex}`, 'attachment');
         };
 
         slotsGrid.appendChild(magBtn);
-    }
+    });
 
     container.appendChild(slotsGrid);
     return container;
@@ -742,14 +925,16 @@ function getCompatibleMagazinesForWeapon(weapon) {
     if (!weapon || !Array.isArray(weapon.magazines) || weapon.magazines.length === 0) {
         return [];
     }
-    const magIdSet = new Set(weapon.magazines);
+    const activeRule = getActiveConditionalRule(weapon, 'magazine', {});
+    const magIdSet = new Set(activeRule?.allowed || weapon.magazines);
     const allItems = getAllDatabaseItems();
     const matchedMags = [];
     const seen = new Set();
 
     for (const item of allItems) {
         if (!item || item.id === weapon.id) continue;
-        if (magIdSet.has(item.id)) {
+        const isMatch = magIdSet.has(item.id) || (Array.isArray(item.color) && item.color.some(c => magIdSet.has(c.id)));
+        if (isMatch) {
             if (!seen.has(item.id)) {
                 seen.add(item.id);
                 matchedMags.push(item);
@@ -757,6 +942,51 @@ function getCompatibleMagazinesForWeapon(weapon) {
         }
     }
     return matchedMags;
+}
+
+function getMagazineCompatibilityGroups(weapon) {
+    if (!weapon || !Array.isArray(weapon.magazines) || weapon.magazines.length === 0) return [];
+    const rules = getConditionalRulesForSlot(weapon, 'magazine');
+    if (rules.length === 0) {
+        const items = getCompatibleMagazinesForWeapon(weapon);
+        return items.length ? [{ label: '탄창', items, conditional: false, rule: null }] : [];
+    }
+
+    const groups = [];
+    const seen = new Set();
+    rules.forEach(rule => {
+        const items = getItemsByConstraintIds(rule.allowed);
+        const label = getConditionLabel(rule) || '조건부 장착';
+        const key = `${label}:${items.map(item => item.id).sort().join(',')}`;
+        if (items.length === 0 || seen.has(key)) return;
+        seen.add(key);
+        groups.push({
+            label: label === '기본 장착' ? '탄창 (기본)' : `탄창 (${label})`,
+            items,
+            conditional: label !== '기본 장착',
+            rule
+        });
+    });
+    return groups;
+}
+
+function getWeaponMagazineCompatibility(weapon, targetItem) {
+    const rules = getConditionalRulesForSlot(weapon, 'magazine');
+    if (rules.length === 0) {
+        const targetIds = getItemClassIds(targetItem);
+        return {
+            compatible: Array.isArray(weapon.magazines) && weapon.magazines.some(id => targetIds.includes(id)),
+            note: ''
+        };
+    }
+    const matchingRules = rules.filter(rule => constraintContainsItem(rule.allowed, targetItem));
+    if (matchingRules.length === 0) return { compatible: false, note: '' };
+    const defaultRule = getActiveConditionalRule(weapon, 'magazine', {});
+    if (defaultRule && matchingRules.includes(defaultRule)) return { compatible: true, note: '' };
+    return {
+        compatible: true,
+        note: matchingRules.map(getConditionLabel).filter(Boolean).join(' / ')
+    };
 }
 
 // 특정 아이템을 장착할 수 있는 상위 부모 아이템 목록 필터링 (슬롯 및 탄창 양방향 지원)
@@ -771,7 +1001,9 @@ function getCompatibleParentItems(targetItem) {
         const targetSlotsSet = new Set(targetItem.inventorySlots);
         for (const item of allItems) {
             if (!item || item.id === targetItem.id) continue;
-            if (Array.isArray(item.attachmentSlots) && item.attachmentSlots.some(s => targetSlotsSet.has(s))) {
+            if (Array.isArray(item.attachmentSlots) &&
+                item.attachmentSlots.some(s => targetSlotsSet.has(s)) &&
+                isRuntimeAttachmentCompatible(item, targetItem)) {
                 if (!seen.has(item.id)) {
                     seen.add(item.id);
                     parentMatches.push(item);
@@ -785,10 +1017,13 @@ function getCompatibleParentItems(targetItem) {
         const allWeapons = Object.values(weaponsData).flat();
         for (const weapon of allWeapons) {
             if (!weapon || weapon.id === targetItem.id) continue;
-            if (Array.isArray(weapon.magazines) && weapon.magazines.includes(targetItem.id)) {
+            const compatibility = getWeaponMagazineCompatibility(weapon, targetItem);
+            if (compatibility.compatible) {
                 if (!seen.has(weapon.id)) {
                     seen.add(weapon.id);
-                    parentMatches.push(weapon);
+                    parentMatches.push(compatibility.note
+                        ? { ...weapon, compatibilityNote: compatibility.note }
+                        : weapon);
                 }
             }
         }
@@ -855,9 +1090,9 @@ function createParentCompatibleSection(item) {
 
     const header = document.createElement('div');
     header.className = 'weapon-stats-header';
-    const title = document.createElement('div');
+    const title = document.createElement('h3');
     title.className = 'weapon-stats-title';
-    title.textContent = '- 이 아이템을 장착할 수 있는 아이템 -';
+    title.textContent = '이 아이템을 장착할 수 있는 대상';
     header.appendChild(title);
     container.appendChild(header);
 
@@ -1003,6 +1238,115 @@ function createWebSearchButton(itemName) {
     return link;
 }
 
+function arrangeDetailCard(card, item, categoryKey, panelType) {
+    const toolbar = document.createElement('div');
+    toolbar.className = 'detail-toolbar';
+    const backButton = document.createElement('button');
+    backButton.type = 'button';
+    backButton.className = 'detail-back-btn';
+    backButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg><span>이전으로</span>';
+    backButton.title = '직전에 보던 화면으로 돌아가기';
+    backButton.addEventListener('click', popNavState);
+    const context = document.createElement('div');
+    context.className = 'detail-context';
+    const panelLabel = document.createElement('span');
+    panelLabel.textContent = { weapon: 'SMPZ 웨폰', attachment: 'SMPZ 부착물', gear: 'SMPZ 기어' }[panelType];
+    const category = document.createElement('span');
+    category.className = 'detail-category';
+    category.textContent = getCategoryLabel(item.category || categoryKey);
+    context.append(panelLabel, category);
+    const searchLink = card.querySelector('.item-web-search-btn');
+    if (searchLink) context.appendChild(searchLink);
+    toolbar.append(backButton, context);
+    card.prepend(toolbar);
+
+    const heading = card.querySelector('.weapon-detail-name-container');
+    const gallery = card.querySelector('.gallery-panel-wrapper');
+    const descriptionContainer = card.querySelector('.weapon-detail-description-container');
+    const stats = card.querySelector('.weapon-stats-container');
+    const compatibility = [...card.querySelectorAll('.attachment-slots-container')];
+    const filterPanel = card.querySelector('.gear-filter-charge-panel');
+
+    const layout = document.createElement('div');
+    layout.className = 'detail-overview';
+    const media = document.createElement('div');
+    media.className = 'detail-media-column';
+    media.appendChild(gallery);
+
+    const description = descriptionContainer.querySelector('.weapon-detail-description, .weapon-description-placeholder');
+    if (description) {
+        const section = document.createElement('section');
+        section.className = 'detail-description-section';
+        const title = document.createElement('h3');
+        title.className = 'weapon-stats-title';
+        title.textContent = '아이템 소개';
+        if (description.classList.contains('weapon-description-placeholder')) {
+            description.textContent = '등록된 설명이 없습니다.';
+        }
+        section.append(title, description);
+        media.appendChild(section);
+    }
+    layout.appendChild(media);
+
+    if (stats) {
+        const list = stats.querySelector('.weapon-stats-list');
+        // 수치 행과 뒤따르는 게이지를 하나의 항목으로 묶는다.
+        [...list.children].forEach(row => {
+            if (!row.classList.contains('weapon-stat-row')) return;
+            const metric = document.createElement('div');
+            metric.className = 'detail-stat-item';
+            row.before(metric);
+            metric.appendChild(row);
+            while (metric.nextElementSibling?.matches('.weapon-stat-bar, .detail-compare-value')) {
+                metric.appendChild(metric.nextElementSibling);
+                metric.classList.add('detail-stat-item-meter');
+            }
+        });
+        if (panelType === 'weapon' && compareTarget?.weapon && compareTarget.weapon.id !== item.id) {
+            const legend = document.createElement('div');
+            legend.className = 'detail-compare-legend';
+            [`기준 · ${item.name}`, `비교 · ${compareTarget.weapon.name}`, '초록: 비교 대상 우세 · 빨강: 비교 대상 열세'].forEach(text => {
+                const line = document.createElement('span');
+                line.textContent = text;
+                legend.appendChild(line);
+            });
+            list.before(legend);
+        }
+        layout.appendChild(stats);
+    } else {
+        layout.classList.add('detail-overview-no-stats');
+    }
+
+    const related = document.createElement('div');
+    related.className = 'detail-related';
+    related.append(...compatibility);
+    if (filterPanel) related.prepend(filterPanel);
+    descriptionContainer.remove();
+
+    const sectionNav = document.createElement('nav');
+    sectionNav.className = 'detail-section-nav';
+    sectionNav.setAttribute('aria-label', '상세 정보 바로가기');
+    const sections = [{ label: '개요', target: gallery }];
+    if (stats) sections.push({ label: '능력치', target: stats });
+    if (related.children.length) sections.push({ label: '호환 정보', target: related });
+    sections.forEach(({ label, target }, index) => {
+        target.id = `detail-section-${index}`;
+        target.tabIndex = -1;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = label;
+        button.setAttribute('aria-controls', target.id);
+        button.addEventListener('click', () => {
+            target.focus({ preventScroll: true });
+            target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+        });
+        sectionNav.appendChild(button);
+    });
+    heading.after(sectionNav);
+    card.appendChild(layout);
+    if (related.children.length) card.appendChild(related);
+}
+
 function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) {
     const weaponDetail = showDetailContainer();
     currentCategory = categoryKey;
@@ -1023,7 +1367,7 @@ function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) 
 
     const nameContainer = document.createElement('div');
     nameContainer.className = 'weapon-detail-name-container';
-    const name = document.createElement('div');
+    const name = document.createElement('h2');
     name.className = 'weapon-detail-name';
     const nameWrap = document.createElement('div');
     nameWrap.className = 'weapon-name-wrap';
@@ -1036,9 +1380,6 @@ function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) 
     nameContainer.appendChild(name);
     detailCard.appendChild(nameContainer);
     
-    const divider = document.createElement('div');
-    divider.className = 'weapon-detail-divider';
-    detailCard.appendChild(divider);
     
     const imagePanel = createImagePanelWithArrows(attachment, attachment.name, initialGalleryIndex, (idx) => {
         lastGalleryImageIndex = idx;
@@ -1066,9 +1407,9 @@ function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) 
         
         const statsHeader = document.createElement('div');
         statsHeader.className = 'weapon-stats-header';
-        const statsTitle = document.createElement('div');
+        const statsTitle = document.createElement('h3');
         statsTitle.className = 'weapon-stats-title';
-        statsTitle.textContent = '- 능력치 -';
+        statsTitle.textContent = '능력치';
         statsHeader.appendChild(statsTitle);
         statsContainer.appendChild(statsHeader);
         
@@ -1115,6 +1456,10 @@ function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) 
                         displayVal = `${raw}발`;
                     } else if (key === 'weight') {
                         displayVal = `${raw}g`;
+                    } else if (key === 'recoil' || key === 'sway') {
+                        displayVal = typeof raw === 'number' ? `${raw > 0 ? '+' : ''}${raw}%` : String(raw);
+                    } else if (key === 'magnification') {
+                        displayVal = formatMagnification(raw);
                     } else {
                         displayVal = String(raw);
                     }
@@ -1147,6 +1492,7 @@ function showAttachmentDetail(attachment, categoryKey, initialGalleryIndex = 0) 
         slotsParent.appendChild(parentSection);
     }
     
+    arrangeDetailCard(detailCard, attachment, categoryKey, 'attachment');
     weaponDetail.appendChild(detailCard);
     updateFloatingNav();
     recordCurrentViewHistory('#' + attachment.id);
@@ -1298,6 +1644,7 @@ function updateFloatingNav() {
 
 // 마지막으로 표시된 그리드 상태 (상세 화면에서 "목록으로" 이동 시 사용)
 let lastGridState = null;
+let rootGridState = null;
 
 // 검색 시작 직전의 화면 상태 (검색창을 비우면 이 화면으로 복귀)
 let preSearchView = null;
@@ -1337,6 +1684,12 @@ function isWeaponItem(item) {
     return false;
 }
 
+function isGearItem(item) {
+    if (!item) return false;
+    if (typeof gearData !== 'undefined' && item.category && gearData[item.category]) return true;
+    return false;
+}
+
 const DataParsers = {
     weight: (item) => {
         const val = item?.stats?.weight;
@@ -1357,33 +1710,27 @@ const DataParsers = {
     },
     // 부착물 반동 보정율 (-% 값, 없는 부착물은 0%)
     recoilReduction: (item) => {
+        if (!isAttachmentItem(item)) return null;
         const val = item?.stats?.recoil;
         if (val !== undefined && val !== null && val !== '') {
+            if (typeof val === 'number') return val;
             const str = String(val).trim();
-            if (str.includes('%') || str.startsWith('-') || str.startsWith('+')) {
-                const num = parseFloat(str.replace(/[^0-9.-]/g, ''));
-                return isNaN(num) ? null : num;
-            }
+            const num = parseFloat(str.replace(/[^0-9.-]/g, ''));
+            return isNaN(num) ? null : num;
         }
-        if (isAttachmentItem(item)) {
-            return 0; // 보정치 없음 = 0%
-        }
-        return null;
+        return 0;
     },
     // 부착물 흔들림 보정율 (음수일수록 우수, 없는 부착물은 0%, 양수는 페널티)
     swayReduction: (item) => {
+        if (!isAttachmentItem(item)) return null;
         const val = item?.stats?.sway;
         if (val !== undefined && val !== null && val !== '') {
+            if (typeof val === 'number') return val;
             const str = String(val).trim();
-            if (str.includes('%') || str.startsWith('-') || str.startsWith('+')) {
-                const num = parseFloat(str.replace(/[^0-9.-]/g, ''));
-                return isNaN(num) ? null : num;
-            }
+            const num = parseFloat(str.replace(/[^0-9.-]/g, ''));
+            return isNaN(num) ? null : num;
         }
-        if (isAttachmentItem(item)) {
-            return 0; // 페널티 없음 = 0%
-        }
-        return null;
+        return 0;
     },
     // 전술 플래시 조사 거리 (m 단위)
     lightDistance: (item) => {
@@ -1395,6 +1742,7 @@ const DataParsers = {
     },
     // 총기 기본 반동 (퍼센트 없는 수치)
     weaponRecoil: (item) => {
+        if (!isWeaponItem(item)) return null;
         const val = item?.stats?.recoil;
         if (val === undefined || val === null || val === '') return null;
         const str = String(val).trim();
@@ -1404,6 +1752,7 @@ const DataParsers = {
     },
     // 총기 기본 흔들림 (퍼센트 없는 수치)
     weaponSway: (item) => {
+        if (!isWeaponItem(item)) return null;
         const val = item?.stats?.sway;
         if (val === undefined || val === null || val === '') return null;
         const str = String(val).trim();
@@ -1412,6 +1761,7 @@ const DataParsers = {
         return isNaN(num) ? null : num;
     },
     accuracy: (item) => {
+        if (!isWeaponItem(item)) return null;
         const val = item?.stats?.accuracy;
         if (typeof val === 'number') return val;
         if (!val) return null;
@@ -1429,13 +1779,8 @@ const DataParsers = {
         const mult = item?.stats?.velocityMultiplier !== undefined ? item.stats.velocityMultiplier : 1.0;
         return baseSpeed > 0 ? Math.round(baseSpeed * mult) : null;
     },
-    rpm: (item) => {
-        const val = item?.stats?.rpm;
-        if (!val) return null;
-        const num = parseFloat(String(val).replace(/[^0-9.]/g, ''));
-        return isNaN(num) ? null : num;
-    },
     ergonomics: (item) => {
+        if (!isWeaponItem(item)) return null;
         const val = item?.stats?.ergonomics;
         if (!val) return null;
         const num = parseFloat(String(val).replace(/[^0-9.]/g, ''));
@@ -1443,6 +1788,12 @@ const DataParsers = {
     },
     bulletProtection: (item) => {
         const val = item?.stats?.bulletDamageProtection;
+        if (!val) return null;
+        const num = parseFloat(String(val).replace(/[^0-9.]/g, ''));
+        return isNaN(num) ? null : num;
+    },
+    healthProtection: (item) => {
+        const val = item?.stats?.healthDamageProtection;
         if (!val) return null;
         const num = parseFloat(String(val).replace(/[^0-9.]/g, ''));
         return isNaN(num) ? null : num;
@@ -1467,13 +1818,20 @@ const DataParsers = {
     },
     magnification: (item) => {
         const mag = item?.stats?.magnification;
-        if (!mag) return null;
+        if (!mag && mag !== 0) return null;
+        if (typeof mag === 'number') return mag;
+        if (Array.isArray(mag)) {
+            return mag.length > 0 ? Math.max(...mag) : null;
+        }
         const m = /(\d+(?:\.\d+)?)/g;
         const matches = [...String(mag).matchAll(m)].map(x => parseFloat(x[0]));
         return matches.length > 0 ? Math.max(...matches) : null;
     },
     has3dModel: (item) => {
         return Boolean(item?.model || item?.model3d);
+    },
+    canBePainted: (item) => {
+        return Boolean(item?.canBePainted || (Array.isArray(item?.color) && item.color.some(c => c.canBePainted))) ? 1 : 0;
     }
 };
 
@@ -1522,6 +1880,14 @@ const SORT_METRICS = {
         defaultOrder: 'asc',
         badge: (item, val) => val ? `${val}칸` : null
     },
+    can_be_painted: {
+        id: 'can_be_painted',
+        label: '도색 가능',
+        group: 'common',
+        parser: DataParsers.canBePainted,
+        defaultOrder: 'desc',
+        badge: (item, val) => val ? '도색 가능' : null
+    },
 
     // 기어 수납
     cargo_slots: {
@@ -1550,7 +1916,7 @@ const SORT_METRICS = {
         group: 'attachment',
         parser: DataParsers.recoilReduction,
         defaultOrder: 'asc',
-        badge: (item) => item?.stats?.recoil ? `반동 ${item.stats.recoil}` : (isAttachmentItem(item) ? '반동 0%' : null)
+        badge: (item) => item?.stats?.recoil !== undefined ? `반동 ${typeof item.stats.recoil === 'number' ? `${item.stats.recoil > 0 ? '+' : ''}${item.stats.recoil}%` : item.stats.recoil}` : (isAttachmentItem(item) ? '반동 0%' : null)
     },
     sway_reduction: {
         id: 'sway_reduction',
@@ -1558,7 +1924,7 @@ const SORT_METRICS = {
         group: 'attachment',
         parser: DataParsers.swayReduction,
         defaultOrder: 'asc',
-        badge: (item) => item?.stats?.sway ? `흔들림 ${item.stats.sway}` : (isAttachmentItem(item) ? '흔들림 0%' : null)
+        badge: (item) => item?.stats?.sway !== undefined ? `흔들림 ${typeof item.stats.sway === 'number' ? `${item.stats.sway > 0 ? '+' : ''}${item.stats.sway}%` : item.stats.sway}` : (isAttachmentItem(item) ? '흔들림 0%' : null)
     },
     light_distance: {
         id: 'light_distance',
@@ -1574,7 +1940,7 @@ const SORT_METRICS = {
         group: 'attachment',
         parser: DataParsers.magnification,
         defaultOrder: 'desc',
-        badge: (item) => item?.stats?.magnification ? `배율 ${item.stats.magnification}` : null
+        badge: (item) => item?.stats?.magnification ? `배율 ${formatMagnification(item.stats.magnification)}` : null
     },
 
     // 방어구 성능
@@ -1585,6 +1951,14 @@ const SORT_METRICS = {
         parser: DataParsers.bulletProtection,
         defaultOrder: 'desc',
         badge: (item, val) => val ? `방탄 ${val}%` : null
+    },
+    health_protection: {
+        id: 'health_protection',
+        label: '체력 보호율',
+        group: 'gear',
+        parser: DataParsers.healthProtection,
+        defaultOrder: 'desc',
+        badge: (item, val) => val ? `체력 ${val}%` : null
     },
     shock_protection: {
         id: 'shock_protection',
@@ -1604,14 +1978,6 @@ const SORT_METRICS = {
     },
 
     // 총기 성능
-    rpm: {
-        id: 'rpm',
-        label: 'RPM',
-        group: 'weapon',
-        parser: DataParsers.rpm,
-        defaultOrder: 'desc',
-        badge: (item, val) => val ? `${val} RPM` : null
-    },
     moa: {
         id: 'moa',
         label: 'MOA',
@@ -1668,7 +2034,7 @@ function getItemCaliber(item) {
 
 // 광학 조준경 배율 추출 (data.js의 stats.magnification 직결)
 function getOpticMagnification(item) {
-    return item?.stats?.magnification || null;
+    return formatMagnification(item?.stats?.magnification);
 }
 
 // 대표 스펙 추출
@@ -1708,17 +2074,21 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
     const isGear = pType === 'gear' || ['full_body_armor', 'plate_carrier', 'helmet', 'helmet_attachment', 'mask', 'backpack', 'chest_rig', '전신 방탄복', '플레이트 캐리어', '방탄복', '헬멧', '헬멧 부착물', '마스크', '백팩', '체스트 리그'].includes(cat);
     if (isGear) {
         const bProt = DataParsers.bulletProtection(item);
+        const hProt = DataParsers.healthProtection(item);
         const sProt = DataParsers.shockProtection(item);
         const cargo = DataParsers.cargoSlots(item);
 
         if (bProt !== null && bProt > 0) {
             specs.push({ metricKey: 'bullet_protection', label: '방탄', text: `방탄 ${bProt}%`, tagClass: 'spec-armor' });
         }
+        if (hProt !== null && hProt > 0) {
+            specs.push({ metricKey: 'health_protection', label: '체력', text: `체력 ${hProt}%`, tagClass: 'spec-health' });
+        }
         if (sProt !== null && sProt > 0) {
             specs.push({ metricKey: 'shock_protection', label: '쇼크', text: `쇼크 ${sProt}%`, tagClass: 'spec-shock' });
         }
         if (cargo && cargo > 0) {
-            const cargoText = item.cargoSize ? `수납 ${item.cargoSize} (${cargo}칸)` : `수납 ${cargo}칸`;
+            const cargoText = item.cargoSize ? `수납 ${formatSize(item.cargoSize)} (${cargo}칸)` : `수납 ${cargo}칸`;
             specs.push({ metricKey: 'cargo_slots', label: '수납', text: cargoText, tagClass: 'spec-cargo' });
         }
     }
@@ -1738,11 +2108,13 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
     const swy = item.stats?.sway;
     const cap = item.stats?.capacity;
 
-    if (!isWeapon && rec && (String(rec).includes('%') || String(rec).startsWith('-') || String(rec).startsWith('+'))) {
-        specs.push({ metricKey: 'recoil_reduction', label: '반동', text: `반동 ${rec}`, tagClass: 'spec-recoil' });
+    if (!isWeapon && rec !== undefined && rec !== null && rec !== 0) {
+        const recText = typeof rec === 'number' ? `${rec > 0 ? '+' : ''}${rec}%` : String(rec);
+        specs.push({ metricKey: 'recoil_reduction', label: '반동', text: `반동 ${recText}`, tagClass: 'spec-recoil' });
     }
-    if (!isWeapon && swy && (String(swy).includes('%') || String(swy).startsWith('-') || String(swy).startsWith('+'))) {
-        specs.push({ metricKey: 'sway_reduction', label: '흔들림', text: `흔들림 ${swy}`, tagClass: 'spec-sway' });
+    if (!isWeapon && swy !== undefined && swy !== null && swy !== 0) {
+        const swyText = typeof swy === 'number' ? `${swy > 0 ? '+' : ''}${swy}%` : String(swy);
+        specs.push({ metricKey: 'sway_reduction', label: '흔들림', text: `흔들림 ${swyText}`, tagClass: 'spec-sway' });
     }
     if (cap && !specs.some(s => s.metricKey === 'capacity')) {
         const capText = `${cap}발`;
@@ -1758,9 +2130,7 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
         const alreadyHasMetric = specs.some(s => s.metricKey === activeMetricKey);
         if (!alreadyHasMetric) {
             if (isWeapon) {
-                if (activeMetricKey === 'rpm' && item.stats?.rpm) {
-                    specs.push({ metricKey: 'rpm', label: 'RPM', text: `${item.stats.rpm} RPM`, tagClass: 'spec-rpm' });
-                } else if (activeMetricKey === 'moa' && item.stats?.accuracy) {
+                if (activeMetricKey === 'moa' && item.stats?.accuracy) {
                     specs.push({ metricKey: 'moa', label: 'MOA', text: `${item.stats.accuracy} MOA`, tagClass: 'spec-moa' });
                 } else if (activeMetricKey === 'velocity') {
                     const vel = DataParsers.velocity(item);
@@ -1778,7 +2148,7 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
             if (activeMetricKey === 'weight' && item.stats?.weight) {
                 specs.push({ metricKey: 'weight', label: '무게', text: `${item.stats.weight}g`, tagClass: 'spec-weight' });
             } else if (activeMetricKey === 'item_slots' && (item.itemSlots !== undefined && item.itemSlots !== null)) {
-                const slotText = item.itemSize ? `${item.itemSize} (${item.itemSlots}칸)` : `${item.itemSlots}칸`;
+                const slotText = item.itemSize ? `${formatSize(item.itemSize)} (${item.itemSlots}칸)` : `${item.itemSlots}칸`;
                 specs.push({ metricKey: 'item_slots', label: '크기', text: slotText, tagClass: 'spec-size' });
             } else if (activeMetricKey === 'hitpoints') {
                 const hp = DataParsers.hitpoints(item);
@@ -1788,7 +2158,7 @@ function getItemCoreSpecs(item, categoryKey, panelType, activeMetricKey = curren
             } else if (activeMetricKey === 'cargo_slots') {
                 const cargo = DataParsers.cargoSlots(item);
                 if (cargo !== null && cargo > 0) {
-                    const cargoText = item.cargoSize ? `수납 ${item.cargoSize} (${cargo}칸)` : `수납 ${cargo}칸`;
+                    const cargoText = item.cargoSize ? `수납 ${formatSize(item.cargoSize)} (${cargo}칸)` : `수납 ${cargo}칸`;
                     specs.push({ metricKey: 'cargo_slots', label: '수납', text: cargoText, tagClass: 'spec-cargo' });
                 }
             }
@@ -1850,11 +2220,36 @@ const STATIC_FILTER_CHIPS = [
         filter: (item) => (DataParsers.bulletProtection(item) || 0) > 0
     },
     {
+        id: 'gear_health_protection',
+        label: '체력 보호',
+        group: 'gear',
+        panels: ['gear'],
+        filter: (item) => (DataParsers.healthProtection(item) || 0) > 0
+    },
+    {
         id: 'is_storage',
         label: '수납 공간 보유',
         group: 'gear',
         panels: ['gear'],
         filter: (item) => (DataParsers.cargoSlots(item) || 0) > 0
+    },
+
+    // 3. 공통: 도색 가능 필터
+    {
+        id: 'can_be_painted',
+        label: '도색 가능',
+        group: 'paint',
+        panels: ['weapon', 'gear', 'attachment'],
+        filter: (item) => Boolean(item?.canBePainted || (Array.isArray(item?.color) && item.color.some(c => c.canBePainted)))
+    },
+
+    // 4. 무기 탭: 총열 조절 가능 필터
+    {
+        id: 'can_adjust_barrel',
+        label: '총열 조절 가능',
+        group: 'barrel',
+        panels: ['weapon'],
+        filter: (item) => Boolean(item?.canAdjustBarrel || (Array.isArray(item?.color) && item.color.some(c => c.canAdjustBarrel)))
     }
 ];
 
@@ -1910,17 +2305,23 @@ function hasAnyValidValueForMetric(items, metric) {
     if (metric.compare) return true; // 이름순은 항상 유효
     if (!items || items.length === 0) return false;
 
+    if (metric.group === 'weapon' && !items.some(isWeaponItem)) return false;
+    if (metric.group === 'attachment' && !items.some(isAttachmentItem)) return false;
+    if (metric.group === 'gear' && !items.some(isGearItem)) return false;
+
     // 부착물 반동/흔들림의 경우, 실제로 stats에 관련 보정치/페널티 데이터가 1개라도 존재하는지 확인
     if (metric.id === 'recoil_reduction') {
         return items.some(item => {
+            if (!isAttachmentItem(item)) return false;
             const str = String(item?.stats?.recoil || '').trim();
-            return str.includes('%') || str.startsWith('-') || str.startsWith('+');
+            return str.includes('%') || str.startsWith('-') || str.startsWith('+') || (typeof item?.stats?.recoil === 'number' && item.stats.recoil !== 0);
         });
     }
     if (metric.id === 'sway_reduction') {
         return items.some(item => {
+            if (!isAttachmentItem(item)) return false;
             const str = String(item?.stats?.sway || '').trim();
-            return str.includes('%') || str.startsWith('-') || str.startsWith('+');
+            return str.includes('%') || str.startsWith('-') || str.startsWith('+') || (typeof item?.stats?.sway === 'number' && item.stats.sway !== 0);
         });
     }
     if (metric.id === 'magnification') {
@@ -1938,11 +2339,14 @@ function hasAnyValidValueForMetric(items, metric) {
             return (item.category === 'magazine' || item.category === '탄창' || Boolean(item?.stats?.capacity)) && DataParsers.capacity(item) !== null;
         });
     }
-    if (metric.id === 'bullet_protection' || metric.id === 'shock_protection') {
+    if (metric.id === 'bullet_protection' || metric.id === 'health_protection' || metric.id === 'shock_protection') {
         return items.some(item => {
             const val = metric.parser ? metric.parser(item) : null;
             return val !== null && val > 0;
         });
+    }
+    if (metric.id === 'can_be_painted') {
+        return items.some(item => Boolean(item?.canBePainted || (Array.isArray(item?.color) && item.color.some(c => c.canBePainted))));
     }
 
     return items.some(item => {
@@ -1968,9 +2372,6 @@ function getCategoryDefaultSort(panelType, categoryKey) {
     }
     if (['backpack', 'chest_rig', '백팩', '체스트 리그'].includes(categoryKey)) {
         return { metric: 'cargo_slots', order: 'desc' };
-    }
-    if (panelType === 'weapon' && categoryKey !== 'all') {
-        return { metric: 'rpm', order: 'desc' };
     }
     return { metric: 'name', order: 'asc' };
 }
@@ -2008,7 +2409,7 @@ function updateSortOptionsDropdown(panelType, categoryKey, preferredMetric, pref
         metricSelect.appendChild(optgroup);
     });
 
-    // 레거시 키 호환 지원 (예: 'rpm_desc' -> metric='rpm', order='desc')
+    // 레거시 키 호환 지원 (예: 'name_desc' -> metric='name', order='desc')
     let reqMetric = preferredMetric;
     let reqOrder = preferredOrder;
     if (typeof reqMetric === 'string' && reqMetric.includes('_') && !SORT_METRICS[reqMetric]) {
@@ -2117,7 +2518,55 @@ function createSubCategoryChipsRow(labelTitle, prefix, types, itemsToCheck) {
 
     row.appendChild(chipsWrap);
     wrap.appendChild(row);
+
+    const traitRow = createTraitFilterRow(itemsToCheck);
+    if (traitRow) {
+        wrap.appendChild(traitRow);
+    }
+
     return wrap;
+}
+
+function createTraitFilterRow(itemsToCheck) {
+    const traitChips = STATIC_FILTER_CHIPS.filter(chip =>
+        ['can_be_painted', 'can_adjust_barrel'].includes(chip.id) && itemsToCheck.some(item => chip.filter(item))
+    );
+    if (traitChips.length === 0) return null;
+
+    const row = document.createElement('div');
+    row.className = 'grid-filter-row';
+
+    const label = document.createElement('span');
+    label.className = 'grid-filter-row-label';
+    label.textContent = '특성:';
+    row.appendChild(label);
+
+    const chipsWrap = document.createElement('div');
+    chipsWrap.className = 'grid-filter-chips-list';
+
+    traitChips.forEach(chip => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `grid-filter-chip ${currentGridActiveChips.has(chip.id) ? 'active' : ''}`;
+        btn.dataset.chipId = chip.id;
+        btn.innerHTML = `<span>${chip.label}</span>`;
+
+        btn.addEventListener('click', () => {
+            if (currentGridActiveChips.has(chip.id)) {
+                currentGridActiveChips.delete(chip.id);
+                btn.classList.remove('active');
+            } else {
+                currentGridActiveChips.add(chip.id);
+                btn.classList.add('active');
+            }
+            applyGridSortAndFilters();
+        });
+
+        chipsWrap.appendChild(btn);
+    });
+
+    row.appendChild(chipsWrap);
+    return row;
 }
 
 // 빠른 필터 칩 바 갱신
@@ -2221,6 +2670,11 @@ function updateFilterChipsBar(panelType, categoryKey, items) {
             wrap.appendChild(modeRow);
         }
 
+        const traitRow = createTraitFilterRow(itemsToCheck);
+        if (traitRow) {
+            wrap.appendChild(traitRow);
+        }
+
         container.appendChild(wrap);
         return;
     }
@@ -2272,11 +2726,16 @@ function updateFilterChipsBar(panelType, categoryKey, items) {
             wrap.appendChild(calRow);
         }
 
+        const traitRow = createTraitFilterRow(itemsToCheck);
+        if (traitRow) {
+            wrap.appendChild(traitRow);
+        }
+
         container.appendChild(wrap);
         return;
     }
 
-    // 3. 기어 탭: 방탄 / 수납 공간 보유
+    // 3. 기어 탭: 방탄 / 수납 공간 보유 / 도색 가능
     if (isGearView) {
         if (categoryKey === 'helmet_attachment' || categoryKey === '헬멧 부착물' || (itemsToCheck.length > 0 && itemsToCheck.every(it => it.category === 'helmet_attachment' || it.category === '헬멧 부착물'))) {
             const helmTypes = ['visor', 'armor_plate', 'mandible', 'other'];
@@ -2293,7 +2752,7 @@ function updateFilterChipsBar(panelType, categoryKey, items) {
         const chipsWrap = document.createElement('div');
         chipsWrap.className = 'grid-filter-chips-list';
 
-        const gearChips = STATIC_FILTER_CHIPS.filter(c => c.group === 'gear');
+        const gearChips = STATIC_FILTER_CHIPS.filter(c => c.group === 'gear' || c.group === 'paint');
         gearChips.forEach(chip => {
             if (!itemsToCheck.some(it => chip.filter(it))) return;
 
@@ -2408,7 +2867,7 @@ function updateFilterChipsBar(panelType, categoryKey, items) {
         (categoryKey === 'muzzle_device' || categoryKey === '소염기 / 머즐' || (itemsToCheck.length > 0 && itemsToCheck.every(it => it.category === 'muzzle_device' || it.category === '소염기 / 머즐')));
 
     if (isMuzzleOnlyView) {
-        const muzzleTypes = ['556_ar15', '762_ar10', 'heavy_shotgun', 'pistol_smg_other', 'ak'];
+        const muzzleTypes = ['556_ar15', '762_ar10', 'heavy_shotgun', 'multi_caliber', 'pistol_smg_other', 'ak'];
         container.appendChild(createSubCategoryChipsRow('머즐 규격', 'mzl', muzzleTypes, itemsToCheck));
         return;
     }
@@ -2421,6 +2880,15 @@ function updateFilterChipsBar(panelType, categoryKey, items) {
         const suppressorTypes = ['556_ar15', '762_ar10', 'heavy_shotgun', 'multi_caliber', 'pistol_smg_other', 'ak'];
         container.appendChild(createSubCategoryChipsRow('소음기 규격', 'sup', suppressorTypes, itemsToCheck));
         return;
+    }
+
+    // 14. 일반 카테고리 및 검색 뷰 기본 처리
+    const traitRow = createTraitFilterRow(itemsToCheck);
+    if (traitRow) {
+        const wrap = document.createElement('div');
+        wrap.className = 'grid-filter-groups';
+        wrap.appendChild(traitRow);
+        container.appendChild(wrap);
     }
 }
 
@@ -2454,6 +2922,8 @@ function applyGridSortAndFilters() {
         const activeCalibers = [];
         const activeModes = [];
         const activeGear = [];
+        let activePaint = false;
+        let activeBarrelAdjustment = false;
         const activeSubFilters = new Map();
 
         currentGridActiveChips.forEach(chipId => {
@@ -2463,6 +2933,10 @@ function applyGridSortAndFilters() {
                 activeModes.push(chipId);
             } else if (chipId.startsWith('gear_') || chipId === 'is_armor' || chipId === 'is_storage') {
                 activeGear.push(chipId);
+            } else if (chipId === 'can_be_painted') {
+                activePaint = true;
+            } else if (chipId === 'can_adjust_barrel') {
+                activeBarrelAdjustment = true;
             } else {
                 const underscoreIdx = chipId.indexOf('_');
                 if (underscoreIdx > 0) {
@@ -2513,6 +2987,18 @@ function applyGridSortAndFilters() {
                         return false;
                     }
                 }
+            }
+
+            // 2-5. 도색 가능 필터
+            if (activePaint) {
+                const passPaint = Boolean(item.canBePainted || (Array.isArray(item.color) && item.color.some(c => c.canBePainted)));
+                if (!passPaint) return false;
+            }
+
+            // 2-6. 총열 조절 가능 필터
+            if (activeBarrelAdjustment) {
+                const passBarrelAdjustment = Boolean(item.canAdjustBarrel || (Array.isArray(item.color) && item.color.some(c => c.canAdjustBarrel)));
+                if (!passBarrelAdjustment) return false;
             }
 
             return true;
@@ -2728,6 +3214,9 @@ function showGridView(title, items, categoryKey, panelType, shouldRestoreScroll 
         sortOrder: savedSortOrder,
         activeChips: savedActiveChips
     };
+    if (!isSubGridCategory(categoryKey)) {
+        rootGridState = { ...lastGridState };
+    }
     currentPanel = panelType;
     currentCategory = categoryKey;
     currentWeapon = null;
@@ -2902,7 +3391,7 @@ function getPlaceholderIconHtml(item, categoryKey, panelType, context = 'card') 
     if (context === 'detail') {
         return `<img src="${filePath}" alt="${altText}" class="${imgClass}">`;
     }
-    return `<div class="grid-card-placeholder-wrap"><img src="${filePath}" alt="${altText}" class="${imgClass}"></div>`;
+    return `<div class="grid-card-placeholder-wrap"><img src="${filePath}" alt="${altText}" class="${imgClass}" loading="lazy" decoding="async"></div>`;
 }
 
 // 그리드 카드 생성 (이미지 + 이름 + 동적 스펙 뱃지)
@@ -2917,6 +3406,8 @@ function createGridCard(item, categoryKey, panelType) {
     const images = getItemImages(item);
     if (images.length > 0) {
         const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
         img.src = images[0];
         img.alt = item.name;
         img.onerror = function() {
@@ -2953,6 +3444,14 @@ function createGridCard(item, categoryKey, panelType) {
     nameEl.className = 'grid-card-name';
     nameEl.textContent = item.name;
     card.appendChild(nameEl);
+
+    if (item.compatibilityNote) {
+        const compatibilityNote = document.createElement('div');
+        compatibilityNote.className = 'grid-card-compatibility-note';
+        compatibilityNote.textContent = item.compatibilityNote;
+        compatibilityNote.title = `조건부 호환: ${item.compatibilityNote}`;
+        card.appendChild(compatibilityNote);
+    }
 
     // 대표 스펙 태그 표시
     const coreSpecs = getItemCoreSpecs(item, categoryKey, panelType, currentGridSortMetric);
@@ -3183,7 +3682,7 @@ const FIRE_MODES_KO_MAP = {
 };
 
 // 아이템 크기 및 수납 공간 행 추가
-function appendItemSpecRows(statsList, item) {
+function appendItemSpecRows(statsList, item, options = {}) {
     if (!item || !statsList) return;
 
     // 사용 탄종 / 삽탄가능 탄종
@@ -3227,7 +3726,8 @@ function appendItemSpecRows(statsList, item) {
 
         const value = document.createElement('span');
         value.className = 'weapon-stat-value';
-        const sizeStr = item.itemSize || '';
+        value.dataset.itemSizeValue = 'true';
+        const sizeStr = item.itemSize ? formatSize(item.itemSize) : '';
         const slotStr = (item.itemSlots !== undefined && item.itemSlots !== null) ? `${item.itemSlots}칸` : '';
         value.textContent = sizeStr ? (slotStr ? `${sizeStr} (${slotStr})` : sizeStr) : slotStr;
 
@@ -3247,7 +3747,7 @@ function appendItemSpecRows(statsList, item) {
 
         const value = document.createElement('span');
         value.className = 'weapon-stat-value';
-        const cargoSizeStr = item.cargoSize || '';
+        const cargoSizeStr = item.cargoSize ? formatSize(item.cargoSize) : '';
         const cargoSlotStr = (item.cargoSlots !== undefined && item.cargoSlots !== null) ? `${item.cargoSlots}칸` : '';
         value.textContent = cargoSizeStr ? (cargoSlotStr ? `${cargoSizeStr} (${cargoSlotStr})` : cargoSizeStr) : cargoSlotStr;
 
@@ -3324,6 +3824,178 @@ function appendItemSpecRows(statsList, item) {
         row.appendChild(chipsWrap);
         statsList.appendChild(row);
     }
+
+    // 도색 여부 (Can Be Painted)
+    const paintRow = document.createElement('div');
+    paintRow.className = 'weapon-stat-row weapon-stat-row-areas';
+
+    const paintLabel = document.createElement('span');
+    paintLabel.className = 'weapon-stat-label';
+    paintLabel.textContent = '도색 여부:';
+
+    const paintChipsWrap = document.createElement('div');
+    paintChipsWrap.className = 'protection-chips-wrapper';
+
+    const paintChip = document.createElement('span');
+    paintChip.className = 'protection-area-chip paint-status-chip';
+
+    const colors = item.color;
+    const initialPaintStatus = (colors && colors.length > 0 && colors[0].canBePainted !== undefined)
+        ? Boolean(colors[0].canBePainted)
+        : Boolean(item.canBePainted);
+
+    function updatePaintBadge(isPaintable) {
+        paintChip.className = `protection-area-chip paint-status-chip ${isPaintable ? 'paint-status-yes' : 'paint-status-no'}`;
+        paintChip.textContent = isPaintable ? '가능' : '불가능';
+    }
+
+    updatePaintBadge(initialPaintStatus);
+    paintChipsWrap.appendChild(paintChip);
+    paintRow.appendChild(paintLabel);
+    paintRow.appendChild(paintChipsWrap);
+    statsList.appendChild(paintRow);
+
+    let updateBarrelAdjustment = null;
+    if (isWeaponItem(item)) {
+        const barrelRow = document.createElement('div');
+        barrelRow.className = 'weapon-stat-row weapon-stat-row-areas';
+
+        const barrelLabel = document.createElement('span');
+        barrelLabel.className = 'weapon-stat-label';
+        barrelLabel.textContent = '총열 조절:';
+
+        const barrelChipsWrap = document.createElement('div');
+        barrelChipsWrap.className = 'protection-chips-wrapper';
+
+        const barrelStatusChip = document.createElement('span');
+        barrelStatusChip.className = 'protection-area-chip barrel-status-chip';
+
+        updateBarrelAdjustment = (canAdjust, variants) => {
+            barrelChipsWrap.innerHTML = '';
+            barrelStatusChip.className = `protection-area-chip barrel-status-chip ${canAdjust ? 'barrel-status-yes' : 'barrel-status-no'}`;
+            barrelStatusChip.textContent = canAdjust ? '가능' : '불가능';
+            barrelChipsWrap.appendChild(barrelStatusChip);
+
+            if (canAdjust && Array.isArray(variants)) {
+                variants.forEach(variant => {
+                    const chip = document.createElement('button');
+                    chip.type = 'button';
+                    chip.className = 'protection-area-chip barrel-adjustment-chip';
+                    chip.textContent = variant.name;
+                    chip.setAttribute('title', variant.isDefault ? `${variant.name} (기본 스폰)` : variant.name);
+                    chip.setAttribute('aria-pressed', String(Boolean(variant.isDefault)));
+                    if (variant.isDefault) chip.classList.add('active');
+
+                    chip.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        barrelChipsWrap.querySelectorAll('.barrel-adjustment-chip').forEach(button => {
+                            button.classList.remove('active');
+                            button.setAttribute('aria-pressed', 'false');
+                        });
+                        chip.classList.add('active');
+                        chip.setAttribute('aria-pressed', 'true');
+                        if (typeof options.onBarrelVariantChange === 'function') {
+                            options.onBarrelVariantChange(variant);
+                        }
+                    });
+                    barrelChipsWrap.appendChild(chip);
+                });
+            }
+        };
+
+        const initialBarrelVariant = colors && colors.length > 0 ? colors[0] : item;
+        updateBarrelAdjustment(
+            Boolean(initialBarrelVariant.canAdjustBarrel),
+            initialBarrelVariant.barrelVariants
+        );
+
+        barrelRow.appendChild(barrelLabel);
+        barrelRow.appendChild(barrelChipsWrap);
+        statsList.appendChild(barrelRow);
+    }
+
+    // 지원 색상 (Color Variants)
+    if (colors && Array.isArray(colors) && colors.length > 0) {
+        const row = document.createElement('div');
+        row.className = 'weapon-stat-row weapon-stat-row-areas';
+
+        const label = document.createElement('span');
+        label.className = 'weapon-stat-label';
+        label.textContent = '지원 색상:';
+
+        const chipsWrap = document.createElement('div');
+        chipsWrap.className = 'protection-chips-wrapper';
+
+        colors.forEach((c, idx) => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.setAttribute('aria-pressed', String(idx === 0));
+            chip.className = 'protection-area-chip color-variant-chip';
+            if (idx === 0) chip.classList.add('active');
+            chip.textContent = c.name;
+            chip.setAttribute('title', c.id || c.name);
+
+            chip.onclick = (e) => {
+                e.stopPropagation();
+                chipsWrap.querySelectorAll('.color-variant-chip').forEach(ch => {
+                    ch.classList.remove('active');
+                    ch.setAttribute('aria-pressed', 'false');
+                });
+                chip.classList.add('active');
+                chip.setAttribute('aria-pressed', 'true');
+
+                if (c.image) {
+                    const detailCard = statsList.closest('.weapon-detail-card') || document.querySelector('.weapon-detail-card');
+                    const mainImg = detailCard ? detailCard.querySelector('.weapon-detail-image') : null;
+                    if (mainImg) {
+                        mainImg.src = c.image;
+                    }
+                }
+
+                if (c.canBePainted !== undefined) {
+                    updatePaintBadge(Boolean(c.canBePainted));
+                }
+
+                if (updateBarrelAdjustment) {
+                    updateBarrelAdjustment(Boolean(c.canAdjustBarrel), c.barrelVariants);
+                    const defaultBarrelVariant = Array.isArray(c.barrelVariants)
+                        ? c.barrelVariants.find(variant => variant.isDefault)
+                        : null;
+                    if (defaultBarrelVariant && typeof options.onBarrelVariantChange === 'function') {
+                        options.onBarrelVariantChange(defaultBarrelVariant);
+                    }
+                }
+            };
+            chipsWrap.appendChild(chip);
+        });
+
+        row.appendChild(label);
+        row.appendChild(chipsWrap);
+        statsList.appendChild(row);
+    }
+}
+
+let modelViewerLoadingPromise = null;
+function ensureModelViewerLoaded() {
+    if (typeof window === 'undefined') return Promise.resolve();
+    if (window.customElements && window.customElements.get('model-viewer')) {
+        return Promise.resolve();
+    }
+    if (modelViewerLoadingPromise) {
+        return modelViewerLoadingPromise;
+    }
+    modelViewerLoadingPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js';
+        script.onload = () => resolve();
+        script.onerror = (err) => {
+            modelViewerLoadingPromise = null;
+            reject(err);
+        };
+        document.head.appendChild(script);
+    });
+    return modelViewerLoadingPromise;
 }
 
 // 이미지/3D 패널 생성 (갤러리 타이틀 + 화살표 + 3D 인스펙트 뷰어 지원)
@@ -3337,9 +4009,9 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
     const headerRow = document.createElement('div');
     headerRow.className = 'gallery-header-row';
     
-    const galleryTitle = document.createElement('div');
+    const galleryTitle = document.createElement('h3');
     galleryTitle.className = 'gallery-title';
-    galleryTitle.textContent = '- 갤러리 -';
+    galleryTitle.textContent = '갤러리';
     headerRow.appendChild(galleryTitle);
     
     let is3DMode = false;
@@ -3353,11 +4025,13 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
         btn2D.type = 'button';
         btn2D.className = 'gallery-mode-btn active';
         btn2D.textContent = '사진';
+        btn2D.setAttribute('aria-pressed', 'true');
         
         const btn3D = document.createElement('button');
         btn3D.type = 'button';
         btn3D.className = 'gallery-mode-btn';
         btn3D.textContent = '3D';
+        btn3D.setAttribute('aria-pressed', 'false');
         
         modeSwitch.appendChild(btn2D);
         modeSwitch.appendChild(btn3D);
@@ -3388,6 +4062,19 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
     const img = document.createElement('img');
     img.className = 'weapon-detail-image';
     let currentIndex = Math.max(0, Math.min(initialImageIndex, Math.max(0, images.length - 1)));
+    const galleryFooter = document.createElement('div');
+    galleryFooter.className = 'gallery-footer';
+    const imageCounter = document.createElement('span');
+    imageCounter.className = 'gallery-counter';
+    imageCounter.setAttribute('aria-live', 'polite');
+    imageCounter.textContent = images.length ? `${currentIndex + 1} / ${images.length}` : '등록된 이미지가 없습니다';
+    const zoomButton = document.createElement('button');
+    zoomButton.type = 'button';
+    zoomButton.className = 'gallery-zoom-btn';
+    zoomButton.textContent = '이미지 확대';
+    zoomButton.hidden = !images.length;
+    zoomButton.addEventListener('click', () => openImageModal(img.src, itemName));
+    galleryFooter.append(imageCounter, zoomButton);
     if (images.length > 0) {
         img.src = images[currentIndex];
         img.alt = itemName;
@@ -3403,9 +4090,17 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
         img.onerror = function() {
             this.style.display = 'none';
             placeholder.style.display = 'flex';
+            imageCounter.textContent = '이미지를 불러올 수 없습니다';
+            zoomButton.hidden = true;
+        };
+        img.onload = () => {
+            img.style.display = '';
+            placeholder.style.display = 'none';
+            imageCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+            zoomButton.hidden = false;
         };
         img.onclick = function() {
-            openImageModal(images[currentIndex], itemName);
+            openImageModal(img.src, itemName);
         };
         imgWrapper.appendChild(img);
     }
@@ -3426,29 +4121,24 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
         img.alt = itemName;
         img.style.display = '';
         placeholder.style.display = 'none';
-        img.onclick = () => openImageModal(images[currentIndex], itemName);
+        imageCounter.textContent = `${currentIndex + 1} / ${images.length}`;
     }
     
     if (hasMultiple) {
         const notifyChange = () => {
             if (typeof onImageIndexChange === 'function') onImageIndexChange(currentIndex);
         };
-        const blurArrow = (e) => {
-            e.target.blur();
-        };
         arrowLeft.addEventListener('click', (e) => {
             e.stopPropagation();
             currentIndex = (currentIndex - 1 + images.length) % images.length;
             updateImage();
             notifyChange();
-            blurArrow(e);
         });
         arrowRight.addEventListener('click', (e) => {
             e.stopPropagation();
             currentIndex = (currentIndex + 1) % images.length;
             updateImage();
             notifyChange();
-            blurArrow(e);
         });
     }
     
@@ -3459,6 +4149,7 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
     // 3D 뷰 요소 (hasModel일 때 준비)
     let modelViewerContainer = null;
     if (hasModel) {
+        ensureModelViewerLoaded();
         modelViewerContainer = document.createElement('div');
         modelViewerContainer.className = 'model-viewer-container';
         modelViewerContainer.style.display = 'none';
@@ -3466,11 +4157,14 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
         modelViewerEl = document.createElement('model-viewer');
         modelViewerEl.className = 'weapon-model-viewer';
         modelViewerEl.setAttribute('src', item.model);
+        modelViewerEl.setAttribute('alt', `${itemName} 3D 모델`);
         if (images.length > 0) {
             modelViewerEl.setAttribute('poster', images[0]);
         }
         modelViewerEl.setAttribute('camera-controls', '');
-        modelViewerEl.setAttribute('auto-rotate', '');
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            modelViewerEl.setAttribute('auto-rotate', '');
+        }
         modelViewerEl.setAttribute('auto-rotate-delay', '3000');
         modelViewerEl.setAttribute('rotation-per-second', '30deg');
         modelViewerEl.setAttribute('shadow-intensity', '1');
@@ -3560,8 +4254,12 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
         const btn3D = headerRow.querySelector('.gallery-mode-btn:last-child');
         if (btn2D) btn2D.classList.toggle('active', !to3D);
         if (btn3D) btn3D.classList.toggle('active', to3D);
+        btn2D?.setAttribute('aria-pressed', String(!to3D));
+        btn3D?.setAttribute('aria-pressed', String(to3D));
+        galleryFooter.hidden = to3D;
         
         if (to3D) {
+            ensureModelViewerLoaded();
             imgWrapper.style.display = 'none';
             arrowLeft.style.display = 'none';
             arrowRight.style.display = 'none';
@@ -3577,6 +4275,7 @@ function createImagePanelWithArrows(item, itemName, initialImageIndex = 0, onIma
     }
     
     galleryWrapper.appendChild(imageContainer);
+    galleryWrapper.appendChild(galleryFooter);
     return galleryWrapper;
 }
 
@@ -3610,6 +4309,107 @@ const CALIBER_BASE_SPEEDS = {
 };
 
 // 무기 상세 정보 표시
+function getWeaponDetailStatState(weapon, stat) {
+    const raw = weapon?.stats?.[stat.key];
+    let displayText = raw !== undefined && raw !== null && raw !== '' ? String(raw) : '-';
+    let numericValue = NaN;
+    let footnoteTooltip = '';
+
+    if (stat.key === 'velocity') {
+        const primaryCaliber = weapon?.calibers?.[0];
+        const baseSpeed = primaryCaliber ? (CALIBER_BASE_SPEEDS[primaryCaliber] || 0) : 0;
+        const multiplier = weapon?.stats?.velocityMultiplier !== undefined ? weapon.stats.velocityMultiplier : 1.0;
+        const calculatedSpeed = baseSpeed > 0 ? Math.round(baseSpeed * multiplier) : (raw ? parseFloat(raw) : 0);
+        if (calculatedSpeed > 0) {
+            displayText = `${calculatedSpeed} m/s`;
+            numericValue = calculatedSpeed;
+            if (baseSpeed > 0 && weapon?.stats?.velocityMultiplier !== undefined) {
+                footnoteTooltip = `기준 탄속 ${baseSpeed} m/s × 무기 탄속 배율 ${Number(multiplier)}배`;
+            }
+        }
+    } else if (raw !== undefined && raw !== null && raw !== '') {
+        numericValue = parseFloat(String(raw).replace(/[^0-9.-]/g, ''));
+        if (stat.isMoa) {
+            displayText = `${raw} MOA`;
+            if (!isNaN(numericValue) && numericValue > 0) {
+                const d100 = Number((numericValue * 2.9).toFixed(1));
+                const d300 = Number((numericValue * 2.9 * 3).toFixed(1));
+                const d500 = Number((numericValue * 2.9 * 5).toFixed(1));
+                footnoteTooltip = `100m 탄착군 지름 약 ${d100}cm\n300m 탄착군 지름 약 ${d300}cm\n500m 탄착군 지름 약 ${d500}cm`;
+            }
+        }
+    }
+
+    let percent = 0;
+    if (!isNaN(numericValue) && stat.max > 0) {
+        percent = stat.invert
+            ? 100 - (numericValue / stat.max * 100)
+            : (numericValue / stat.max) * 100;
+        percent = Math.max(0, Math.min(100, percent));
+    }
+
+    return { displayText, numericValue, percent, footnoteTooltip };
+}
+
+function updateWeaponDetailStats(statsList, baseWeapon, barrelVariant, statsDefs) {
+    if (!statsList || !barrelVariant) return;
+
+    const selectedWeapon = {
+        ...baseWeapon,
+        id: barrelVariant.id || baseWeapon.id,
+        stats: barrelVariant.stats || baseWeapon.stats,
+        itemSize: barrelVariant.itemSize || baseWeapon.itemSize,
+        itemSlots: barrelVariant.itemSlots ?? baseWeapon.itemSlots
+    };
+
+    statsDefs.forEach(stat => {
+        const state = getWeaponDetailStatState(selectedWeapon, stat);
+        const value = statsList.querySelector(`[data-weapon-stat-value="${stat.key}"]`);
+        const barFill = statsList.querySelector(`[data-weapon-stat-fill="${stat.key}"]`);
+
+        if (value) {
+            value.textContent = state.displayText;
+            if (state.footnoteTooltip) {
+                const footnote = document.createElement('button');
+                footnote.type = 'button';
+                footnote.className = 'stat-footnote';
+                footnote.textContent = '*';
+                footnote.setAttribute('data-tooltip', state.footnoteTooltip);
+                footnote.setAttribute('aria-label', footnote.dataset.tooltip);
+                value.appendChild(footnote);
+            }
+        }
+        if (barFill) {
+            barFill.style.width = `${state.percent}%`;
+        }
+
+        const compareFill = statsList.querySelector(`[data-weapon-compare-fill="${stat.key}"]`);
+        if (compareFill && compareTarget?.weapon) {
+            const compareState = getWeaponDetailStatState(compareTarget.weapon, stat);
+            compareFill.classList.remove('stat-better', 'stat-worse', 'stat-equal');
+            if (!isNaN(state.numericValue) && !isNaN(compareState.numericValue)) {
+                const lowerIsBetter = stat.key === 'recoil' || stat.key === 'sway' || stat.isMoa;
+                const isBetter = lowerIsBetter
+                    ? compareState.numericValue < state.numericValue
+                    : compareState.numericValue > state.numericValue;
+                const isWorse = lowerIsBetter
+                    ? compareState.numericValue > state.numericValue
+                    : compareState.numericValue < state.numericValue;
+                compareFill.classList.add(isBetter ? 'stat-better' : (isWorse ? 'stat-worse' : 'stat-equal'));
+            }
+        }
+    });
+
+    const itemSizeValue = statsList.querySelector('[data-item-size-value="true"]');
+    if (itemSizeValue) {
+        const sizeText = selectedWeapon.itemSize ? formatSize(selectedWeapon.itemSize) : '';
+        const slotText = selectedWeapon.itemSlots !== undefined && selectedWeapon.itemSlots !== null
+            ? `${selectedWeapon.itemSlots}칸`
+            : '';
+        itemSizeValue.textContent = sizeText ? (slotText ? `${sizeText} (${slotText})` : sizeText) : slotText;
+    }
+}
+
 function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
     const weaponDetail = showDetailContainer();
 
@@ -3635,7 +4435,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
     const nameContainer = document.createElement('div');
     nameContainer.className = 'weapon-detail-name-container';
     
-    const name = document.createElement('div');
+    const name = document.createElement('h2');
     name.className = 'weapon-detail-name';
     
     // 제조사 로고가 있으면 표시
@@ -3715,10 +4515,6 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
     nameContainer.appendChild(name);
     detailCard.appendChild(nameContainer);
     
-    // 구분선
-    const divider = document.createElement('div');
-    divider.className = 'weapon-detail-divider';
-    detailCard.appendChild(divider);
     
     // 총기 사진 (화살표로 다중 이미지 탐색)
     const weaponImagePanel = createImagePanelWithArrows(weapon, weapon.name, initialGalleryIndex, (idx) => {
@@ -3754,16 +4550,16 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
         const statsHeaderSpacer = document.createElement('div');
         statsHeaderSpacer.className = 'weapon-stats-spacer';
 
-        const statsTitle = document.createElement('div');
+        const statsTitle = document.createElement('h3');
         statsTitle.className = 'weapon-stats-title';
-        statsTitle.textContent = '- 능력치 -';
+        statsTitle.textContent = '능력치';
 
         const compareBtn = document.createElement('button');
         compareBtn.type = 'button';
         compareBtn.className = 'weapon-compare-btn';
         // 비교 대상이 설정되어 있으면 "비교 해제"로 표시
         const hasCompare = !!(compareTarget && compareTarget.weapon);
-        compareBtn.textContent = hasCompare ? '비교 해제' : '비교';
+        compareBtn.textContent = hasCompare ? '비교 해제' : '무기 비교';
         compareBtn.onclick = () => {
             if (compareTarget && compareTarget.weapon) {
                 // 비교 해제: 비교 대상 초기화 후 현재 무기 다시 렌더링
@@ -3803,8 +4599,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
             { key: 'ergonomics',  label: '인체공학', max: 100,  invert: false },
             // DayZ 소스코드 기준: 일반 무기는 maxMOA = 25.0
             { key: 'accuracy',    label: '명중률',   max: 25.0, invert: true, isMoa: true },
-            { key: 'velocity',    label: '탄속',     max: 1200, invert: false },
-            { key: 'rpm',         label: 'RPM',      max: 1200, invert: false }
+            { key: 'velocity',    label: '탄속',     max: 1200, invert: false }
         ];
 
         statsDefs.forEach(stat => {
@@ -3817,6 +4612,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
 
             const value = document.createElement('span');
             value.className = 'weapon-stat-value';
+            value.dataset.weaponStatValue = stat.key;
             const raw = weapon.stats[stat.key];
             let displayText = raw !== undefined && raw !== null && raw !== "" ? String(raw) : '-';
             let calcSpeed = 0;
@@ -3837,11 +4633,13 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
             value.textContent = displayText;
 
             if (stat.key === 'velocity' && calcSpeed > 0 && weapon.stats && weapon.stats.velocityMultiplier !== undefined && baseSpeed > 0) {
-                const footnote = document.createElement('sup');
+                const footnote = document.createElement('button');
+                footnote.type = 'button';
                 footnote.className = 'stat-footnote';
                 footnote.textContent = '*';
                 const multStr = Number(weapon.stats.velocityMultiplier).toString();
                 footnote.setAttribute('data-tooltip', `기준 탄속 ${baseSpeed} m/s × 무기 탄속 배율 ${multStr}배`);
+                footnote.setAttribute('aria-label', footnote.dataset.tooltip);
                 value.appendChild(footnote);
             }
 
@@ -3850,7 +4648,8 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
                 if (match) {
                     const moaNum = parseFloat(match[1]);
                     if (!isNaN(moaNum) && moaNum > 0) {
-                        const footnote = document.createElement('sup');
+                        const footnote = document.createElement('button');
+                        footnote.type = 'button';
                         footnote.className = 'stat-footnote';
                         footnote.textContent = '*';
                         const d100 = Number((moaNum * 2.9).toFixed(1));
@@ -3858,6 +4657,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
                         const d500 = Number((moaNum * 2.9 * 5).toFixed(1));
                         const tooltipText = `100m 탄착군 지름 약 ${d100}cm\n300m 탄착군 지름 약 ${d300}cm\n500m 탄착군 지름 약 ${d500}cm`;
                         footnote.setAttribute('data-tooltip', tooltipText);
+                        footnote.setAttribute('aria-label', footnote.dataset.tooltip);
                         value.appendChild(footnote);
                     }
                 }
@@ -3897,6 +4697,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
 
             const barFill = document.createElement('div');
             barFill.className = 'weapon-stat-bar-fill';
+            barFill.dataset.weaponStatFill = stat.key;
             barFill.style.width = `${percent}%`;
 
             bar.appendChild(barFill);
@@ -3943,7 +4744,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
                         better = numericCompare < numericValue;  // 비교값이 기준값보다 낮으면 좋음
                         worse = numericCompare > numericValue;   // 비교값이 기준값보다 높으면 나쁨
                     } else {
-                        // 나머지(인체공학, 탄속, RPM)는 값이 높을수록 좋음
+                        // 나머지(인체공학, 탄속)는 값이 높을수록 좋음
                         better = numericCompare > numericValue;  // 비교값이 기준값보다 높으면 좋음
                         worse = numericCompare < numericValue;   // 비교값이 기준값보다 낮으면 나쁨
                     }
@@ -3959,9 +4760,14 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
 
                 const compareBar = document.createElement('div');
                 compareBar.className = 'weapon-stat-bar weapon-stat-bar-compare';
+                const compareValue = document.createElement('div');
+                compareValue.className = 'detail-compare-value';
+                compareValue.textContent = `비교 · ${getWeaponDetailStatState(compareWeapon, stat).displayText}`;
+                statsList.appendChild(compareValue);
 
                 const compareFill = document.createElement('div');
                 compareFill.className = 'weapon-stat-bar-fill';
+                compareFill.dataset.weaponCompareFill = stat.key;
                 if (diffClass) {
                     compareFill.classList.add(`stat-${diffClass}`);
                 }
@@ -3972,7 +4778,11 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
             }
         });
 
-        appendItemSpecRows(statsList, weapon);
+        appendItemSpecRows(statsList, weapon, {
+            onBarrelVariantChange: (barrelVariant) => {
+                updateWeaponDetailStats(statsList, weapon, barrelVariant, statsDefs);
+            }
+        });
 
         statsContainer.appendChild(statsList);
 
@@ -4012,6 +4822,7 @@ function showWeaponDetail(weapon, categoryKey, initialGalleryIndex = 0) {
         }
     }
     
+    arrangeDetailCard(detailCard, weapon, categoryKey, 'weapon');
     weaponDetail.appendChild(detailCard);
     updateFloatingNav();
     recordCurrentViewHistory('#' + weapon.id);
@@ -4041,7 +4852,7 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
     const nameContainer = document.createElement('div');
     nameContainer.className = 'weapon-detail-name-container';
 
-    const name = document.createElement('div');
+    const name = document.createElement('h2');
     name.className = 'weapon-detail-name';
 
     if (gear.manufacturerLogo) {
@@ -4097,9 +4908,6 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
     nameContainer.appendChild(name);
     detailCard.appendChild(nameContainer);
     
-    const divider = document.createElement('div');
-    divider.className = 'weapon-detail-divider';
-    detailCard.appendChild(divider);
     
     // 기어 사진 (화살표로 다중 이미지 탐색)
     const gearImagePanel = createImagePanelWithArrows(gear, gear.name, initialGalleryIndex, (idx) => {
@@ -4132,9 +4940,9 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
         statsHeader.className = 'weapon-stats-header';
         const statsHeaderSpacer = document.createElement('div');
         statsHeaderSpacer.className = 'weapon-stats-spacer';
-        const statsTitle = document.createElement('div');
+        const statsTitle = document.createElement('h3');
         statsTitle.className = 'weapon-stats-title';
-        statsTitle.textContent = '- 능력치 -';
+        statsTitle.textContent = '능력치';
         const statsHeaderSpacerRight = document.createElement('div');
         statsHeaderSpacerRight.className = 'weapon-stats-spacer';
         statsHeader.appendChild(statsHeaderSpacer);
@@ -4159,10 +4967,11 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
         statsList.appendChild(catRow);
 
         if (gear.stats) {
-            const hasProtectionStats = ['bulletDamageProtection', 'bloodDamageProtection', 'shockDamageProtection'].some(k => gear.stats[k] !== undefined);
+            const hasProtectionStats = ['bulletDamageProtection', 'healthDamageProtection', 'bloodDamageProtection', 'shockDamageProtection'].some(k => gear.stats[k] !== undefined);
             if (hasProtectionStats) {
                 const gearStatsDefs = [
                     { key: 'bulletDamageProtection', label: '총탄 데미지 보호률' },
+                    { key: 'healthDamageProtection', label: '체력 데미지 보호률' },
                     { key: 'bloodDamageProtection', label: '유혈 데미지 보호률' },
                     { key: 'shockDamageProtection', label: '충격 데미지 보호률' }
                 ];
@@ -4254,9 +5063,9 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
         filterHeader.className = 'weapon-stats-header';
         const filterSpacer = document.createElement('div');
         filterSpacer.className = 'weapon-stats-spacer';
-        const filterTitle = document.createElement('div');
+        const filterTitle = document.createElement('h3');
         filterTitle.className = 'weapon-stats-title';
-        filterTitle.textContent = '- 필터 충전 가능 여부 -';
+        filterTitle.textContent = '필터 충전';
         const filterSpacerRight = document.createElement('div');
         filterSpacerRight.className = 'weapon-stats-spacer';
         filterHeader.appendChild(filterSpacer);
@@ -4305,6 +5114,7 @@ function showGearDetail(gear, categoryKey, initialGalleryIndex = 0) {
         slotsParent.appendChild(parentSection);
     }
     
+    arrangeDetailCard(detailCard, gear, categoryKey, 'gear');
     weaponDetail.appendChild(detailCard);
     updateFloatingNav();
     recordCurrentViewHistory('#' + gear.id);
@@ -4417,14 +5227,14 @@ function setupEventListeners() {
     // 모달 닫기
     document.querySelectorAll('.close').forEach(closeBtn => {
         closeBtn.addEventListener('click', (e) => {
-            e.target.closest('.modal').style.display = 'none';
+            closeDetailModal(e.target.closest('.modal'));
         });
     });
     
     // 모달 외부 클릭 시 닫기
     window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
+            closeDetailModal(e.target);
         }
     });
     
@@ -4439,21 +5249,38 @@ function setupEventListeners() {
             closeImageBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                imageModal.style.setProperty('display', 'none', 'important');
+                closeDetailModal(imageModal);
             });
         }
         
         // 이미지 모달 외부 클릭 시 닫기
         imageModal.addEventListener('click', (e) => {
             if (e.target === imageModal || e.target.classList.contains('image-modal')) {
-                imageModal.style.setProperty('display', 'none', 'important');
+                closeDetailModal(imageModal);
             }
         });
     }
     
     // ESC 키로 모든 모달 닫기 및 이전 화면 복귀
     document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && activeDetailModal) {
+            const controls = [...activeDetailModal.querySelectorAll('button, a[href], input, select, [tabindex="0"]')]
+                .filter(element => !element.disabled && element.getClientRects().length > 0);
+            const first = controls[0];
+            const last = controls[controls.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+                e.preventDefault();
+                last?.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+                e.preventDefault();
+                first?.focus();
+            }
+        }
         if (e.key === 'Escape') {
+            if (document.activeElement?.classList.contains('stat-footnote')) {
+                document.activeElement.blur();
+                return;
+            }
             let closedSomething = false;
 
             const dropdown = document.getElementById('categoryDropdown');
@@ -4466,7 +5293,7 @@ function setupEventListeners() {
             if (imageModal) {
                 const computedStyle = window.getComputedStyle(imageModal);
                 if (computedStyle.display !== 'none') {
-                    imageModal.style.setProperty('display', 'none', 'important');
+                    closeDetailModal(imageModal);
                     closedSomething = true;
                 }
             }
@@ -4476,7 +5303,7 @@ function setupEventListeners() {
                 if (modal.id !== 'imageModal') {
                     const computedStyle = window.getComputedStyle(modal);
                     if (computedStyle.display !== 'none') {
-                        modal.style.display = 'none';
+                        closeDetailModal(modal);
                         closedSomething = true;
                     }
                 }
@@ -4518,6 +5345,25 @@ function setupEventListeners() {
     });
 }
 
+function openDetailModal(modal, display) {
+    detailModalReturnFocus = document.activeElement;
+    activeDetailModal = modal;
+    modal.style.setProperty('display', display, 'important');
+    document.body.classList.add('detail-modal-open');
+    modal.querySelector('button')?.focus({ preventScroll: true });
+}
+
+function closeDetailModal(modal) {
+    modal.style.setProperty('display', 'none', 'important');
+    if (activeDetailModal !== modal) return;
+    activeDetailModal = null;
+    document.body.classList.remove('detail-modal-open');
+    if (detailModalReturnFocus?.isConnected) {
+        detailModalReturnFocus.focus({ preventScroll: true });
+    }
+    detailModalReturnFocus = null;
+}
+
 // 이미지 확대 모달 열기
 function openImageModal(imageSrc, imageAlt) {
     const imageModal = document.getElementById('imageModal');
@@ -4526,7 +5372,7 @@ function openImageModal(imageSrc, imageAlt) {
     if (imageModal && modalImage) {
         modalImage.src = imageSrc;
         modalImage.alt = imageAlt;
-        imageModal.style.setProperty('display', 'flex', 'important');
+        openDetailModal(imageModal, 'flex');
     }
 }
 
@@ -4564,17 +5410,18 @@ function openCompareModal() {
             btn.textContent = w.name;
             btn.onclick = () => {
                 compareTarget = { weapon: w, categoryKey };
-                modal.style.display = 'none';
+                closeDetailModal(modal);
                 // 현재 무기를 다시 렌더링하여 비교 바를 표시
                 if (currentWeapon && currentCategory) {
                     showWeaponDetail(currentWeapon, currentCategory);
+                    document.querySelector('.weapon-compare-btn')?.focus({ preventScroll: true });
                 }
             };
             listContainer.appendChild(btn);
         });
     });
 
-    modal.style.display = 'block';
+    openDetailModal(modal, 'block');
 }
 
 // 무기/부착물/기어 전체 검색 함수 (검색 결과를 그리드로 표시)
